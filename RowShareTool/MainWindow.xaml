@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RowShareTool"
         xmlns:sfw="clr-namespace:SoftFluent.Windows;assembly=SoftFluent.Windows"
         mc:Ignorable="d"
         Title="RowShare" Height="350" Width="525" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
@@ -14,6 +13,7 @@
         </Grid.RowDefinitions>
         <Menu Name="MainMenu" IsMainMenu="True" Grid.Row="0">
             <MenuItem Header="_File" Height="24" SubmenuOpened="FileMenu_Opened">
+                <MenuItem Header="Add server" Click="Connect_Click" />
                 <MenuItem Name="MenuExit" Header="E_xit" InputGestureText="Alt+F4" Click="Exit_Click" />
             </MenuItem>
         </Menu>

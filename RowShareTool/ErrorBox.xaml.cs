@@ -169,7 +169,7 @@ namespace RowShareTool
                     Thread.Sleep(500);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 _showingUi = false;
             }

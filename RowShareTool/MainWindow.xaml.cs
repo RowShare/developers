@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,8 +19,8 @@ namespace RowShareTool
             PG.DefaultCategoryName = "General";
             Settings = Settings.DeserializeFromConfiguration();
 
-            List<Server> list = new List<Server>();
-            foreach(var s in Settings.Servers)
+            var list = new ObservableCollection<Server>();
+            foreach (var s in Settings.Servers)
             {
                 Server server = new Server();
                 server.DisplayName = s.Url;
@@ -37,9 +37,26 @@ namespace RowShareTool
             Close();
         }
 
-        private void LoadTreeView(IEnumerable<Server> servers)
+        private void LoadTreeView(ObservableCollection<Server> servers)
         {
             TV.ItemsSource = servers;
+        }
+
+        private void AddServerToTreeView(SettingsServer settingsServer)
+        {
+            Server server = new Server();
+            server.DisplayName = settingsServer.Url;
+            server.Cookie = settingsServer.Cookie;
+
+            var servers = (ObservableCollection<Server>) TV.ItemsSource;
+            servers.Add(server);
+        }
+
+        private void RemoveServerToTreeView(SettingsServer settingsServer)
+        {
+            var servers = (ObservableCollection<Server>)TV.ItemsSource;
+            Server server = servers.FirstOrDefault(s => s.Url.EqualsIgnoreCase(settingsServer.Url));
+            servers.Remove(server);
         }
 
         private void TV_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -75,7 +92,7 @@ namespace RowShareTool
             var folder = TV.SelectedItem as Folder;
             TreeViewEditRows.SetCollapsed(list == null);
             TreeViewImportList.SetCollapsed(folder == null);
-            TreeViewDelete.IsEnabled = list != null || (folder != null && !folder.IsRoot);
+            TreeViewDelete.IsEnabled = server != null || list != null || (folder != null && !folder.IsRoot);
 
             TreeViewLogin.SetCollapsed(server == null);
             TreeViewLogout.SetCollapsed(server == null);
@@ -169,7 +186,15 @@ namespace RowShareTool
                 if (this.ShowConfirm("Delete " + item.GetType().Name + " '" + item.DisplayName + "'?") == MessageBoxResult.No)
                     return;
 
-                if (item.Delete())
+                Server server = item as Server;
+                if (server != null)
+                {
+                    var settingsServer = new SettingsServer {Url = server.Url};
+                    RemoveServerToTreeView(settingsServer);
+                    Settings.RemoveServer(settingsServer);
+                    Settings.SerializeToConfiguration();
+                }
+                else if (item.Delete())
                 {
                     if (item.Parent != null)
                     {
@@ -206,6 +231,19 @@ namespace RowShareTool
             Settings.GetServer(server.Url).Cookie = null;
             Settings.SerializeToConfiguration();
             server.Reload();
+        }
+
+        private void Connect_Click(object sender, RoutedEventArgs e)
+        {
+            var server = new SettingsServer();
+            var dlg = new Connect(server);
+            dlg.Owner = this;
+            if (dlg.ShowDialog().GetValueOrDefault())
+            {
+                Settings.AddServer(server);
+                Settings.SerializeToConfiguration();
+                AddServerToTreeView(server);
+            }
         }
     }
 }

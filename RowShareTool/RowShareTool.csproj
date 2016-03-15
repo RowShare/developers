@@ -69,6 +69,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Connect.xaml.cs">
+      <DependentUpon>Connect.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ErrorBox.xaml.cs">
       <DependentUpon>ErrorBox.xaml</DependentUpon>
     </Compile>
@@ -104,6 +107,10 @@
     </Compile>
     <Compile Include="Utilities\SystemInformation.cs" />
     <Compile Include="WpfExtensions.cs" />
+    <Page Include="Connect.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ErrorBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
