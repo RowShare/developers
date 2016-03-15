@@ -1,0 +1,29 @@
+﻿<Application x:Class="RowShareTool.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:RowShareTool"
+             xmlns:localm="clr-namespace:RowShareTool.Model"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <local:TypeDataTemplateSelector x:Key="TreeViewItemTemplateSelector">
+            <HierarchicalDataTemplate DataType="{x:Type localm:TreeItem}" ItemsSource="{Binding Children}">
+                <Border BorderThickness="0" MinWidth="50">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding DisplayName}" />
+                    </StackPanel>
+                </Border>
+            </HierarchicalDataTemplate>
+        </local:TypeDataTemplateSelector>
+
+        <Style TargetType="{x:Type TreeViewItem}">
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="FontWeight" Value="Bold" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Application.Resources>
+</Application>

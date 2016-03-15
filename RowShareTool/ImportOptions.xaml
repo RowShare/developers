@@ -1,0 +1,20 @@
+﻿<Window x:Class="RowShareTool.ImportOptions"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RowShareTool"
+        mc:Ignorable="d"
+        Title="Import List Options" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=UserName}" >
+    <Grid MinHeight="160" MinWidth="320" >
+        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" >The list '<TextBlock Text="{Binding List.DisplayName}" />' already exists.</TextBlock>
+        <RadioButton IsChecked="{Binding CreateNewList}" Content="Create a new list:" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" />
+        <Label FontWeight="Bold" Name="NewListName" HorizontalAlignment="Left" Margin="120,25,0,0" VerticalAlignment="Top" Content="{Binding NewListName}" />
+        <RadioButton IsChecked="{Binding ReplaceAllRows}" Content="Replace all rows" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top" />
+        <RadioButton Name="ReplaceWithKey" IsChecked="{Binding ReplaceWithKey}" Content="Add or update rows using a column as key:" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" />
+        <Label IsEnabled="{Binding IsChecked, ElementName=ReplaceWithKey}" HorizontalAlignment="Left" Margin="26,86,0,0" VerticalAlignment="Top">Column:</Label>
+        <ComboBox ItemsSource="{Binding Columns}" SelectedValue="{Binding ReplaceColumn}" IsEnabled="{Binding IsChecked, ElementName=ReplaceWithKey}" Name="ReplaceKey" HorizontalContentAlignment="Stretch"  Text="{Binding ReplaceColumn}" HorizontalAlignment="Left" Margin="82,91,0,0" VerticalAlignment="Top" Width="190" />
+        <Button Name="OK" IsDefault="True" Content="OK" Margin="0,0,90,10" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" Click="OK_Click" />
+        <Button Name="Cancel" IsCancel="True" Content="Cancel" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" Click="Cancel_Click" />
+    </Grid>
+</Window>
