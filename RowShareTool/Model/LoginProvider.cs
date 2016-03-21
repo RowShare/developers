@@ -39,6 +39,7 @@ namespace RowShareTool.Model
                 all.Add(new LoginProvider { Name = "Microsoft" });
                 all.Add(new LoginProvider { Name = "Office365", DisplayName = "Office 365" });
                 all.Add(new LoginProvider { Name = "Yahoo" });
+                all.Add(new LoginProvider { Name = "Rowshare" });
                 return all;
             }
         }
