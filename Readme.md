@@ -30,6 +30,7 @@ You can now browse tables in the tree view.
 | /api/column/loadforparent/{id} | GET    | Load columns definition                     |
 | /api/column/save               | POST   | Add/update the column. See [Column][column] |
 | /api/row/loadforparent/{id}    | GET    | Load table's rows                           |
+| /api/row/load/{id}             | GET    | Load the row                                |
 | /api/row/save                  | POST   | Add/update the row See [Row][row]           |
 | /api/row/deletebatch           | POST   | Add/save a row list. See [Row][row]         |
 
