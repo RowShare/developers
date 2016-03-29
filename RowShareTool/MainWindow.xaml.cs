@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace RowShareTool
             var list = new ObservableCollection<Server>();
             foreach (var s in Settings.Servers)
             {
-                Server server = new Server();
+                var server = new Server();
                 server.DisplayName = s.Url;
                 server.Cookie = s.Cookie;
                 list.Add(server);
@@ -44,7 +45,7 @@ namespace RowShareTool
 
         private void AddServerToTreeView(SettingsServer settingsServer)
         {
-            Server server = new Server();
+            var server = new Server();
             server.DisplayName = settingsServer.Url;
             server.Cookie = settingsServer.Cookie;
 
@@ -66,7 +67,7 @@ namespace RowShareTool
 
         protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
         {
-            TreeViewItem treeViewItem = (e.OriginalSource as DependencyObject).GetVisualSelfOrParent<TreeViewItem>();
+            var treeViewItem = (e.OriginalSource as DependencyObject).GetVisualSelfOrParent<TreeViewItem>();
             if (treeViewItem != null)
             {
                 treeViewItem.Focus();
@@ -106,7 +107,7 @@ namespace RowShareTool
             if (list == null)
                 return;
 
-            Rows dlg = new Rows(list);
+            var dlg = new Rows(list);
             dlg.Title = list.DisplayName;
             dlg.Owner = this;
             dlg.ShowDialog();
@@ -122,7 +123,7 @@ namespace RowShareTool
             if (folder == null)
                 return;
 
-            OpenFileDialog dlg = new OpenFileDialog();
+            var dlg = new OpenFileDialog();
             dlg.AddExtension = true;
             dlg.CheckPathExists = true;
             dlg.CheckPathExists = true;
@@ -134,7 +135,7 @@ namespace RowShareTool
             if (dlg.ShowDialog(this).GetValueOrDefault())
             {
                 string s = File.ReadAllText(dlg.FileName, Encoding.UTF8);
-                ListWithRows lwr = JsonUtilities.Deserialize<ListWithRows>(s);
+                var lwr = JsonUtilities.Deserialize<ListWithRows>(s);
                 if (lwr.List != null)
                 {
                     string name = lwr.List.DisplayName;
@@ -143,7 +144,8 @@ namespace RowShareTool
                     {
                         folder.LazyLoadChildren();
                     }
-                    List list = folder.Children.OfType<List>().FirstOrDefault(l => l.DisplayName.EqualsIgnoreCase(name));
+
+                    var list = folder.Children.OfType<List>().FirstOrDefault(l => l.DisplayName.EqualsIgnoreCase(name));
                     List existingList = list;
                     int i = 1;
                     while (list != null)
@@ -154,10 +156,10 @@ namespace RowShareTool
                         i++;
                     }
 
-                    ImportOptionsDefinition def = new ImportOptionsDefinition(lwr.List, existingList, name);
+                    var def = new ImportOptionsDefinition(lwr.List, existingList, name);
                     if (showOptions)
                     {
-                        ImportOptions options = new ImportOptions(def);
+                        var options = new ImportOptions(def);
                         options.Owner = this;
                         if (!options.ShowDialog().GetValueOrDefault())
                             return;
@@ -186,7 +188,7 @@ namespace RowShareTool
                 if (this.ShowConfirm("Delete " + item.GetType().Name + " '" + item.DisplayName + "'?") == MessageBoxResult.No)
                     return;
 
-                Server server = item as Server;
+                var server = item as Server;
                 if (server != null)
                 {
                     var settingsServer = new SettingsServer {Url = server.Url};
@@ -210,7 +212,7 @@ namespace RowShareTool
             if (server == null)
                 return;
 
-            Login login = new Login(server.Url);
+            var login = new Login(server.Url);
             login.Owner = this;
             if (login.ShowDialog().GetValueOrDefault())
             {
@@ -243,6 +245,28 @@ namespace RowShareTool
                 Settings.AddServer(server);
                 Settings.SerializeToConfiguration();
                 AddServerToTreeView(server);
+            }
+        }
+
+        private void TreeViewOpenList_Click(object sender, RoutedEventArgs e)
+        {
+            var server = TV.GetSelectedTag<Server>();
+            if (server == null)
+                return;
+
+            var list = new List();
+            var dlg = new OpenList(list);
+            dlg.Owner = this;
+            if (dlg.ShowDialog().GetValueOrDefault())
+            {
+                var serverList = server.LoadList(list.IdN);
+                if (serverList != null && serverList.Id != Guid.Empty)
+                {
+                    var dlg2 = new Rows(serverList);
+                    dlg2.Title = serverList.DisplayName;
+                    dlg2.Owner = this;
+                    dlg2.ShowDialog();
+                }
             }
         }
     }

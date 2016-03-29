@@ -73,6 +73,7 @@ namespace RowShareTool.Model
                 {
                     _type = AssemblyUtilities.GetType(ClrType, false);
                 }
+
                 if (_type == null)
                 {
                     _type = typeof(string);

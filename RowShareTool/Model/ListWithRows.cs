@@ -51,7 +51,7 @@ namespace RowShareTool.Model
             if (options == null)
                 throw new ArgumentNullException("options");
 
-            List newList = new List();
+            var newList = new List();
             if (options.ReplaceAllRows)
             {
                 var existingRows = options.ExistingList.LoadRows();
@@ -63,12 +63,12 @@ namespace RowShareTool.Model
                     object db = folder.Server.PostCall("row/deletebatch", null, null, existingRows.ToArray());
                 }
 
-                List<Row> addedRows = new List<Row>();
-                foreach (Row row in Rows)
+                var addedRows = new List<Row>();
+                foreach (var row in Rows)
                 {
                     row.ListId = options.ExistingList.Id;
                     row.Id = Guid.Empty;
-                    Row newRow = new Row();
+                    var newRow = new Row();
                     folder.Server.PostCall("row/save", newRow, null, row);
                     if (newRow.Id != Guid.Empty)
                     {
@@ -116,7 +116,7 @@ namespace RowShareTool.Model
                         existingRow.Values = row.Values;
                     }
 
-                    Row newRow = new Row();
+                    var newRow = new Row();
                     folder.Server.PostCall("row/save", newRow, null, updatedRow);
                 }
             }
@@ -133,7 +133,7 @@ namespace RowShareTool.Model
                 {
                     column.ListId = newList.Id;
                     column.Id = Guid.Empty;
-                    Column newColumn = new Column();
+                    var newColumn = new Column();
                     folder.Server.PostCall("column/save", newColumn, null, column);
                 }
 
@@ -141,7 +141,7 @@ namespace RowShareTool.Model
                 {
                     row.ListId = newList.Id;
                     row.Id = Guid.Empty;
-                    Row newRow = new Row();
+                    var newRow = new Row();
                     folder.Server.PostCall("row/save", newRow, null, row);
                 }
             }

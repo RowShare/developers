@@ -1,9 +1,9 @@
-﻿using CodeFluent.Runtime.Utilities;
-using System;
+﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Threading.Tasks;
+using CodeFluent.Runtime.Utilities;
 
 namespace RowShareTool
 {
@@ -30,7 +30,7 @@ namespace RowShareTool
             Title = obj + " Properties";
             if (obj != null)
             {
-                ReadOnlyAttribute roa = AssemblyUtilities.GetAttribute<ReadOnlyAttribute>(obj.GetType());
+                var roa = AssemblyUtilities.GetAttribute<ReadOnlyAttribute>(obj.GetType());
                 PGrid.IsReadOnly = roa != null && roa.IsReadOnly;
             }
 
@@ -49,7 +49,7 @@ namespace RowShareTool
 
         private void OnLoaded(Action action)
         {
-            Task task = new Task(() => action(), TaskCreationOptions.LongRunning);
+            var task = new Task(() => action(), TaskCreationOptions.LongRunning);
             task.Start();
         }
 

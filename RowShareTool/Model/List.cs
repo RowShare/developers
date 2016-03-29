@@ -162,19 +162,6 @@ namespace RowShareTool.Model
             }
         }
 
-        // not updated yet
-        //public int RowCount
-        //{
-        //    get
-        //    {
-        //        return GetProperty<int>();
-        //    }
-        //    set
-        //    {
-        //        SetProperty(value);
-        //    }
-        //}
-
         public bool CanWrite
         {
             get
@@ -247,6 +234,24 @@ namespace RowShareTool.Model
             {
                 return Id.ToString("N");
             }
+            set
+            {
+                Guid id = Guid.Empty;
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    var split = value.Split('/', '\\');
+                    foreach (string s in split)
+                    {
+                        if (Guid.TryParse(s, out id))
+                            break;
+                    }
+                }
+
+                if (id == Id)
+                    return;
+
+                Id = id;
+            }
         }
 
         public override bool Delete()
@@ -260,7 +265,7 @@ namespace RowShareTool.Model
 
         public ObservableCollection<Row> LoadRows()
         {
-            ObservableCollection<Row> rows = new ObservableCollection<Row>();
+            var rows = new ObservableCollection<Row>();
             if (Parent != null && Parent.Server != null)
             {
                 Parent.Server.Call("row/loadforparent/" + IdN, rows, this);
@@ -270,7 +275,7 @@ namespace RowShareTool.Model
 
         public override int CompareTo(TreeItem other)
         {
-            Folder folder = other as Folder;
+            var folder = other as Folder;
             if (folder != null)
                 return 1;
 

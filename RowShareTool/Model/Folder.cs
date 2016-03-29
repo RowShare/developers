@@ -146,12 +146,12 @@ namespace RowShareTool.Model
         protected override void LoadChildren()
         {
             base.LoadChildren();
-            List<TreeItem> items = new List<TreeItem>();
+            var items = new List<TreeItem>();
             if (ListsIds != null)
             {
                 foreach (Guid id in ListsIds)
                 {
-                    List list = new List(this);
+                    var list = new List(this);
                     Server.Call("list/load/" + id.ToString("N"), list, null);
                     items.Add(list);
                 }
@@ -161,7 +161,7 @@ namespace RowShareTool.Model
             {
                 foreach (Guid id in FoldersIds)
                 {
-                    Folder folder = new Folder(this);
+                    var folder = new Folder(this);
                     Server.Call("folder/load/" + id.ToString("N"), folder, null);
                     items.Add(folder);
                 }
@@ -177,7 +177,7 @@ namespace RowShareTool.Model
 
         public override int CompareTo(TreeItem other)
         {
-            List list = other as List;
+            var list = other as List;
             if (list != null)
                 return -1;
 

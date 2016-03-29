@@ -31,7 +31,8 @@
                         <MenuItem Header="Logout..." Name="TreeViewLogout" Click="TreeViewLogout_Click" />
                         <Separator />
                         <MenuItem Header="Edit Rows..." Name="TreeViewEditRows" Click="TreeViewEditRows_Click" />
-                        <MenuItem Header="Import List..." Name="TreeViewImportList" Click="TreeViewImportList_Click" />
+                        <MenuItem Header="Import Table..." Name="TreeViewImportList" Click="TreeViewImportList_Click" />
+                        <MenuItem Header="Open Table..." Name="TreeViewOpenList" Click="TreeViewOpenList_Click" />
                         <MenuItem Header="Delete..." Name="TreeViewDelete" Click="TreeViewDelete_Click" />
                         <Separator />
                         <MenuItem Header="Refresh" Name="TreeViewRefresh" Click="TreeViewRefresh_Click" />

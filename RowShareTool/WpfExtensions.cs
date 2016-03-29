@@ -70,13 +70,13 @@ namespace RowShareTool
 
         public static void MailTo(string to, string subject, string body, string cc, string bcc)
         {
-            StringBuilder sb = new StringBuilder("mailto:");
+            var sb = new StringBuilder("mailto:");
             if (!string.IsNullOrWhiteSpace(to))
             {
                 sb.Append(Uri.EscapeUriString(to));
             }
 
-            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            var arguments = new Dictionary<string, string>();
             if (!string.IsNullOrWhiteSpace(subject))
             {
                 arguments["subject"] = EscapeMailToArg(subject);
@@ -112,7 +112,7 @@ namespace RowShareTool
                 }
             }
 
-            Process process = new Process();
+            var process = new Process();
             process.StartInfo = new ProcessStartInfo(sb.ToString());
             process.Start();
         }
@@ -257,7 +257,7 @@ namespace RowShareTool
             int count = itemsControl.ItemContainerGenerator.Items.Count;
             for (int i = 0; i < count; i++)
             {
-                ItemsControl child = itemsControl.ItemContainerGenerator.ContainerFromIndex(i) as ItemsControl;
+                var child = itemsControl.ItemContainerGenerator.ContainerFromIndex(i) as ItemsControl;
                 if (child == null)
                     continue;
 
@@ -314,7 +314,7 @@ namespace RowShareTool
             if (sameLevelFirst)
             {
                 int count = VisualTreeHelper.GetChildrenCount(obj);
-                List<DependencyObject> list = new List<DependencyObject>(count);
+                var list = new List<DependencyObject>(count);
                 for (int i = 0; i < count; i++)
                 {
                     DependencyObject child = VisualTreeHelper.GetChild(obj, i);
@@ -372,7 +372,7 @@ namespace RowShareTool
 
         public static bool IsRecursiveKeyboardFocused(this DependencyObject obj)
         {
-            UIElement ue = obj as UIElement;
+            var ue = obj as UIElement;
             if (ue != null && ue.IsFocused)
                 return true;
 
@@ -439,13 +439,13 @@ namespace RowShareTool
 
             if (obj is Visual)
             {
-                PresentationSource source = PresentationSource.FromVisual((Visual)obj);
+                var source = PresentationSource.FromVisual((Visual)obj);
                 if (source != null)
                     return source.RootVisual;
             }
             else
             {
-                FrameworkContentElement element = obj as FrameworkContentElement;
+                var element = obj as FrameworkContentElement;
                 if (element != null)
                     return element.Parent.GetVisualRoot();
             }
@@ -495,7 +495,7 @@ namespace RowShareTool
                 return (T)treeView.SelectedItem;
 
             object tag = null;
-            FrameworkElement fe = treeView.SelectedItem as FrameworkElement;
+            var fe = treeView.SelectedItem as FrameworkElement;
             if (fe != null)
             {
                 tag = fe.Tag;
@@ -506,7 +506,7 @@ namespace RowShareTool
 
             if (recursive)
             {
-                TreeItem ao = treeView.SelectedItem as TreeItem;
+                var ao = treeView.SelectedItem as TreeItem;
                 if (ao != null)
                     return ao.Get<T>();
             }
@@ -526,7 +526,7 @@ namespace RowShareTool
                 if (typeof(T).IsAssignableFrom(item.GetType()))
                     yield return (T)item;
 
-                DependencyObject dep = item as DependencyObject;
+                var dep = item as DependencyObject;
                 if (dep != null)
                 {
                     foreach (T child in dep.GetChildren<T>())
@@ -557,7 +557,7 @@ namespace RowShareTool
 
                 if (typeof(TraceSource).IsAssignableFrom(pi.PropertyType))
                 {
-                    TraceSource ts = (TraceSource)pi.GetValue(null, null);
+                    var ts = (TraceSource)pi.GetValue(null, null);
                     ts.Listeners.Add(listener);
                     ts.Switch.Level = levels;
                 }
@@ -609,7 +609,7 @@ namespace RowShareTool
             if (control == null)
                 return;
 
-            KeyGestureConverter kgc = new KeyGestureConverter();
+            var kgc = new KeyGestureConverter();
             foreach(var item in control.Items.OfType<MenuItem>())
             {
                 if (!string.IsNullOrWhiteSpace(item.InputGestureText))
@@ -662,19 +662,19 @@ namespace RowShareTool
 
             string error = CodeFluentRuntimeException.GetAllMessages(exception);
             string extra = null;
-            WebException we = exception as WebException;
+            var we = exception as WebException;
             if (we != null && we.Response != null)
             {
                 Stream stream = we.Response.GetResponseStream();
                 if (stream != null && stream.CanRead)
                 {
-                    using (StreamReader reader = new StreamReader(stream))
+                    using (var reader = new StreamReader(stream))
                     {
                         extra = reader.ReadToEnd();
                         if (we.Response.Headers[HttpResponseHeader.ContentType] == "application/json" && extra != null)
                         {
                             options.ThrowExceptions = false;
-                            Dictionary<string, object> dic = (Dictionary<string, object>)JsonUtilities.Deserialize(extra, null, options);
+                            var dic = (Dictionary<string, object>)JsonUtilities.Deserialize(extra, null, options);
                             object ex;
                             if (dic.TryGetValue("Exception", out ex))
                             {
@@ -686,11 +686,11 @@ namespace RowShareTool
                                 {
                                     // try without deserialization
                                     options.SerializationOptions &= ~JsonSerializationOptions.UseISerializable;
-                                    Dictionary<string, object> dic2 = (Dictionary<string, object>)JsonUtilities.Deserialize(extra, null, options);
+                                    var dic2 = (Dictionary<string, object>)JsonUtilities.Deserialize(extra, null, options);
                                     if (dic2.TryGetValue("Exception", out ex) && ex is IDictionary<string, object>)
                                     {
-                                        IDictionary<string, object> dicex = (IDictionary<string, object>)ex;
-                                        StringBuilder sb = new StringBuilder(Environment.NewLine);
+                                        var dicex = (IDictionary<string, object>)ex;
+                                        var sb = new StringBuilder(Environment.NewLine);
                                         sb.AppendLine("Source: " + dicex.GetValue<string>("Source", null));
                                         sb.AppendLine("Message: " + dicex.GetValue<string>("Message", null));
                                         sb.AppendLine("Class: " + dicex.GetValue<string>("ClassName", null));

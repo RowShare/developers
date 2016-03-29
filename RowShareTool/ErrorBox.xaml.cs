@@ -60,7 +60,7 @@ namespace RowShareTool
 
         public static string GetDebugInformation()
         {
-            SystemInformation si = new SystemInformation();
+            var si = new SystemInformation();
             return JsonUtilities.SerializeFormatted(si);
         }
 
@@ -104,7 +104,7 @@ namespace RowShareTool
 
         public static void OnCurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception ex = e.ExceptionObject as Exception;
+            var ex = e.ExceptionObject as Exception;
             if (ex == null)
                 return;
 
@@ -143,11 +143,11 @@ namespace RowShareTool
                 if (!_showingUi & WpfExtensions.CanDispatch)
                 {
                     _showingUi = true;
-                    Thread t = new Thread(() =>
+                    var t = new Thread(() =>
                     {
                         try
                         {
-                            ErrorBox dlg = new ErrorBox(exception);
+                            var dlg = new ErrorBox(exception);
                             dlg.ShowDialog();
                             if (dlg.QuitRequested)
                             {

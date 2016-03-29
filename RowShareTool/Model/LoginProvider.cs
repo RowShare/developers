@@ -32,7 +32,7 @@ namespace RowShareTool.Model
         {
             get
             {
-                List<LoginProvider> all = new List<LoginProvider>();
+                var all = new List<LoginProvider>();
                 all.Add(new LoginProvider { Name = "Google" });
                 all.Add(new LoginProvider { Name = "Facebook" });
                 all.Add(new LoginProvider { Name = "LinkedIn" });

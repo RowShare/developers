@@ -32,7 +32,7 @@ namespace RowShareTool
             var button = (FrameworkElement)sender;
             var provider = (LoginProvider)button.DataContext;
 
-            ProviderLogin dlg = new ProviderLogin(Url, provider);
+            var dlg = new ProviderLogin(Url, provider);
             dlg.Title = provider.DisplayName + " Login on " + Url;
             dlg.Owner = this;
             if (dlg.ShowDialog().GetValueOrDefault())

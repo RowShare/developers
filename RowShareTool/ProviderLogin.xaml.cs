@@ -13,7 +13,7 @@ namespace RowShareTool
             Url = url;
             Provider = provider;
             InitializeComponent();
-            this.Loaded += ProviderLogin_Loaded;
+            Loaded += ProviderLogin_Loaded;
             WB.Navigated += WB_Navigated;
         }
 
@@ -40,7 +40,7 @@ namespace RowShareTool
         {
             dynamic doc = WB.Document;
             string cookie = doc.Cookie;
-            NameValueCollectionCollection coll = new NameValueCollectionCollection(cookie);
+            var coll = new NameValueCollectionCollection(cookie);
             Cookie = ConvertUtilities.Nullify(coll.GetValue<string>(Server.CookieName, null), true);
             if (Cookie != null)
             {

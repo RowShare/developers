@@ -94,6 +94,15 @@ namespace RowShareTool.Model
             }
         }
 
+        public List LoadList(string id)
+        {
+            var folder = new Folder(this);
+            var list = new List(folder);
+            list.Id = ConvertUtilities.ChangeType(id, Guid.Empty);
+            Call("list/load/" + id, list, null);
+            return list;
+        }
+
         public object Call(ServerCallParameters parameters, object parent)
         {
             return Call(parameters, null, parent);
@@ -121,7 +130,7 @@ namespace RowShareTool.Model
                     client.Cookies.Add(new Cookie(CookieName, Cookie, "/", new Uri(Url).Host));
                 }
 
-                EditableUri uri = new EditableUri(Url + "/api/" + parameters.Api);
+                var uri = new EditableUri(Url + "/api/" + parameters.Api);
                 if (!string.IsNullOrWhiteSpace(parameters.Format))
                 {
                     uri.Parameters["f"] = parameters.Format;
@@ -141,12 +150,12 @@ namespace RowShareTool.Model
                 }
                 catch (WebException e)
                 {
-                    ErrorBox eb = new ErrorBox(e, e.GetErrorText(null));
+                    var eb = new ErrorBox(e, e.GetErrorText(null));
                     eb.ShowDialog();
                     throw;
                 }
 
-                JsonUtilitiesOptions options = new JsonUtilitiesOptions();
+                var options = new JsonUtilitiesOptions();
                 options.CreateInstanceCallback = (e) =>
                 {
                     Type type = (Type)e.Value;
@@ -204,7 +213,7 @@ namespace RowShareTool.Model
                     client.Cookies.Add(new Cookie(CookieName, Cookie, "/", new Uri(Url).Host));
                 }
 
-                EditableUri uri = new EditableUri(Url + "/api/" + parameters.Api);
+                var uri = new EditableUri(Url + "/api/" + parameters.Api);
 
                 if (parameters.Lcid != 0)
                 {
@@ -220,15 +229,15 @@ namespace RowShareTool.Model
                 }
                 catch (WebException e)
                 {
-                    ErrorBox eb = new ErrorBox(e, e.GetErrorText(null));
+                    var eb = new ErrorBox(e, e.GetErrorText(null));
                     eb.ShowDialog();
                     throw;
                 }
 
-                JsonUtilitiesOptions options = new JsonUtilitiesOptions();
+                var options = new JsonUtilitiesOptions();
                 options.CreateInstanceCallback = (e) =>
                 {
-                    Type type = (Type)e.Value;
+                    var type = (Type)e.Value;
                     if (typeof(TreeItem).IsAssignableFrom(type))
                     {
                         e.Value = Activator.CreateInstance(type, new object[] { parent });

@@ -40,8 +40,8 @@ namespace RowShareTool
         {
             foreach (Column column in List.Columns)
             {
-                DataGridTemplateColumn dgColumn = new DataGridTemplateColumn();
-                DataGridColumnHeader header = new DataGridColumnHeader();
+                var dgColumn = new DataGridTemplateColumn();
+                var header = new DataGridColumnHeader();
                 header.HorizontalContentAlignment = HorizontalAlignment.Center;
                 header.Content = column.DisplayName;
                 dgColumn.Header = header;
@@ -57,7 +57,7 @@ namespace RowShareTool
 
             var tb = new FrameworkElementFactory(typeof(TextBlock));
             tb.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
-            Binding tbb = new Binding("ValuesObject." + column.DisplayName);
+            var tbb = new Binding("ValuesObject." + column.DisplayName);
             tbb.Mode = BindingMode.OneTime;
             tb.SetBinding(TextBlock.TextProperty, tbb);
             sp.AppendChild(tb);
@@ -79,7 +79,7 @@ namespace RowShareTool
         private void OnLoaded()
         {
             _source = new CancellationTokenSource();
-            Task task = new Task(() => LoadRows(_source.Token), _source.Token, TaskCreationOptions.LongRunning);
+            var task = new Task(() => LoadRows(_source.Token), _source.Token, TaskCreationOptions.LongRunning);
             task.Start();
         }
 
@@ -113,7 +113,7 @@ namespace RowShareTool
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog dlg = new SaveFileDialog();
+            var dlg = new SaveFileDialog();
             dlg.AddExtension = true;
             dlg.CheckPathExists = true;
             dlg.ValidateNames = true;
@@ -125,7 +125,7 @@ namespace RowShareTool
             dlg.FileName = List.DisplayName;
             if (dlg.ShowDialog().GetValueOrDefault())
             {
-                ListWithRows lwr = new ListWithRows(List);
+                var lwr = new ListWithRows(List);
                 string s = JsonUtilities.Serialize(lwr);
                 File.WriteAllText(dlg.FileName, s, Encoding.UTF8);
             }
@@ -138,12 +138,12 @@ namespace RowShareTool
 
         private void Row_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement fe = (FrameworkElement)e.Source;
+            var fe = (FrameworkElement)e.Source;
             var row = (Row)fe.DataContext;
             if (row == null)
                 return;
 
-            ObjectProperties dlg = new ObjectProperties(row, true);
+            var dlg = new ObjectProperties(row, true);
             dlg.Title = "Row #" + row.Index;
             dlg.Owner = this;
             dlg.ShowDialog();
