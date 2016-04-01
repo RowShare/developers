@@ -267,6 +267,10 @@ namespace RowShareTool
                     dlg2.Owner = this;
                     dlg2.ShowDialog();
                 }
+                else
+                {
+                    this.ShowError("An error occurred while trying to read the list " + list.IdN + ".");
+                }
             }
         }
     }

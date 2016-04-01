@@ -99,7 +99,12 @@ namespace RowShareTool.Model
             var folder = new Folder(this);
             var list = new List(folder);
             list.Id = ConvertUtilities.ChangeType(id, Guid.Empty);
+            var guid = Guid.NewGuid().ToString();
+            list.DisplayName = guid;
             Call("list/load/" + id, list, null);
+            if (list.DisplayName == guid) // nothing was read
+                return null;
+
             return list;
         }
 
