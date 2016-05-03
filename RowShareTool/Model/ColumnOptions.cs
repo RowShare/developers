@@ -25,5 +25,13 @@ namespace RowShareTool.Model
         IsEmail = 128,
 
         IsFrequent = 256,
+
+        IsForOrganizations = 512,
+
+        IsImage = 1024,
+
+        IsHidden = 2048,
+
+        DoNotShowThousandsSeparator = 4096,
     }
 }

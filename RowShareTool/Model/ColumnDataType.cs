@@ -28,5 +28,9 @@
         Time = 11,
 
         AutoNumber = 12,
+
+        MemberManagerEmail = 13,
+
+        MemberManagerName = 14,
     }
 }
