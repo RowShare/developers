@@ -33,5 +33,11 @@ namespace RowShareTool.Model
         IsHidden = 2048,
 
         DoNotShowThousandsSeparator = 4096,
+
+        IsPercentage = 8192,
+
+        IsTask = 16384,
+
+        IsVote = 32768,
     }
 }

@@ -21,13 +21,14 @@ namespace RowShareTool
         private CancellationTokenSource _source;
         private ObservableCollection<Row> _rows = new ObservableCollection<Row>();
 
-        public Rows(List list)
+        public Rows(List list, bool showListButton)
         {
             if (list == null)
                 throw new ArgumentNullException("list");
 
             List = list;
             InitializeComponent();
+            GoToList.Visibility = showListButton ? Visibility.Visible : Visibility.Hidden;
             SetupGrid();
             DG.ItemsSource = _rows;
             Loaded += (sender, e) => OnLoaded();
@@ -139,12 +140,20 @@ namespace RowShareTool
         private void Row_Click(object sender, RoutedEventArgs e)
         {
             var fe = (FrameworkElement)e.Source;
-            var row = (Row)fe.DataContext;
+            var row = fe.DataContext as Row;
             if (row == null)
                 return;
 
             var dlg = new ObjectProperties(row, true);
             dlg.Title = "Row #" + row.Index;
+            dlg.Owner = this;
+            dlg.ShowDialog();
+        }
+
+        private void GoToList_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new ObjectProperties(List, true);
+            dlg.Title = "List " + List.DisplayName;
             dlg.Owner = this;
             dlg.ShowDialog();
         }

@@ -36,6 +36,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <Button Grid.Row="1" Name="GoToList" Content="List..." Margin="10,0,0,10" HorizontalAlignment="Left" Width="75" Height="23" VerticalAlignment="Bottom" Click="GoToList_Click" />
         <Button Grid.Row="1" Name="OK" IsDefault="True" IsEnabled="{Binding IsValid}" Content="Save" Margin="0,0,90,10" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" Click="OK_Click" />
         <Button Grid.Row="1" Name="Cancel" IsCancel="True" Content="Close" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="23" VerticalAlignment="Bottom" Click="Cancel_Click" />
     </Grid>

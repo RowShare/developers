@@ -69,6 +69,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\FolderOptions.cs" />
     <Compile Include="OpenList.xaml.cs">
       <DependentUpon>OpenList.xaml</DependentUpon>
     </Compile>

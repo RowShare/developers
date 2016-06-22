@@ -107,7 +107,7 @@ namespace RowShareTool
             if (list == null)
                 return;
 
-            var dlg = new Rows(list);
+            var dlg = new Rows(list, false);
             dlg.Title = list.DisplayName;
             dlg.Owner = this;
             dlg.ShowDialog();
@@ -262,7 +262,7 @@ namespace RowShareTool
                 var serverList = server.LoadList(list.IdN);
                 if (serverList != null && serverList.Id != Guid.Empty)
                 {
-                    var dlg2 = new Rows(serverList);
+                    var dlg2 = new Rows(serverList, true);
                     dlg2.Title = serverList.DisplayName;
                     dlg2.Owner = this;
                     dlg2.ShowDialog();

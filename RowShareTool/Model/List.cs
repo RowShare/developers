@@ -69,6 +69,52 @@ namespace RowShareTool.Model
         }
 
         [Browsable(false)]
+        public Guid RowDescriptorId
+        {
+            get
+            {
+                return GetProperty<Guid>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        [DisplayName("RowDescriptor Id")]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
+        public string RowDescriptorIdN
+        {
+            get
+            {
+                return RowDescriptorId.ToString("N");
+            }
+        }
+
+        [Browsable(false)]
+        public Guid OrganizationId
+        {
+            get
+            {
+                return GetProperty<Guid>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        [DisplayName("Organization Id")]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
+        public string OrganizationIdN
+        {
+            get
+            {
+                return OrganizationId.ToString("N");
+            }
+        }
+
+        [Browsable(false)]
         public Guid Id
         {
             get
@@ -198,7 +244,43 @@ namespace RowShareTool.Model
             }
         }
 
+        public string Color
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string MetaData
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
         public string Description
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string Summary
         {
             get
             {

@@ -122,6 +122,30 @@ namespace RowShareTool.Model
             }
         }
 
+        public FolderOptions Options
+        {
+            get
+            {
+                return GetProperty<FolderOptions>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string MetaData
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
         public override void Reload()
         {
             Server.Call("folder/load/" + IdN, this, null);

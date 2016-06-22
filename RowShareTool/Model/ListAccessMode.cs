@@ -19,5 +19,7 @@ namespace RowShareTool.Model
         PublicReadOwnedOnly = 16,
 
         PublicReadWriteOwnedOnly = 32,
+
+        ManagerEquivalence = 64,
     }
 }

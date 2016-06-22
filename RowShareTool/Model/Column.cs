@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using CodeFluent.Runtime.Utilities;
 
@@ -159,6 +160,150 @@ namespace RowShareTool.Model
             get
             {
                 return GetProperty<int>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public List<string> LookupValues
+        {
+            get
+            {
+                return GetProperty<List<string>>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string LookupListId
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string LookupListColumnName
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string SubName
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string Renderer
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string Format
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string DefaultValue
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public string MetaData
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public object MaxValue
+        {
+            get
+            {
+                return GetProperty<object>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public object MinValue
+        {
+            get
+            {
+                return GetProperty<object>();
             }
             set
             {
