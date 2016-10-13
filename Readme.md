@@ -18,12 +18,13 @@ Open context menu on your server node and click on `Login`. Select a social prov
 You can now browse tables in the tree view.
 
 ### Api endpoint
+*Note: this is preliminary and subject to changes.*
 
 | Url                            | Method | Description                                 |
 |--------------------------------|--------|---------------------------------------------|
 | /api/folder/load/{id}          | GET    | Load the folder                             |
 | /api/folder/delete/{id}        | GET    | Delete the folder                           |
-| /api/list/load/{id}            | GET    | Load the list                               |
+| /api/list/load/{id}            | GET    | Load the table                               |
 | /api/list/save                 | POST   | Add/update the table. See [List][list]      |
 | /api/list/delete : {Id:id}     | POST   | Delete the table                            |
 | /api/column/loadforparent/{id} | GET    | Load columns definition                     |
@@ -31,7 +32,7 @@ You can now browse tables in the tree view.
 | /api/row/loadforparent/{id}    | GET    | Load table's rows                           |
 | /api/row/load/{id}             | GET    | Load the row                                |
 | /api/row/save                  | POST   | Add/update the row See [Row][row]           |
-| /api/row/deletebatch           | POST   | Add/save a row list. See [Row][row]         |
+| /api/row/deletebatch           | POST   | Add/save a row in batch mode. See [Row][row]         |
 
 [rowshare]: https://www.rowshare.com
 [list]: RowShareTool/Model/List.cs
