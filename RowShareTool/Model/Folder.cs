@@ -196,7 +196,7 @@ namespace RowShareTool.Model
             {
                 Children.Add(item);
             }
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         public override int CompareTo(TreeItem other)

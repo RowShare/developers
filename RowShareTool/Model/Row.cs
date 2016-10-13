@@ -159,7 +159,7 @@ namespace RowShareTool.Model
                 if (SetProperty(value))
                 {
                     _valuesObject = null;
-                    OnPropertyChanged("ValuesObject");
+                    OnPropertyChanged(nameof(ValuesObject));
                 }
             }
         }

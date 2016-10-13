@@ -61,7 +61,7 @@ namespace RowShareTool.Model
             {
                 Children.Add(folder);
             }
-            OnPropertyChanged("Children");
+            OnPropertyChanged(nameof(Children));
         }
 
         [Browsable(false)]
