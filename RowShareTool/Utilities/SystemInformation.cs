@@ -373,7 +373,7 @@ namespace RowShareTool.Utilities
             public int CompareTo(Asm other)
             {
                 if (other == null)
-                    throw new ArgumentNullException("other");
+                    throw new ArgumentNullException(nameof(other));
 
                 return Name.CompareTo(other.Name);
             }
@@ -382,10 +382,10 @@ namespace RowShareTool.Utilities
         public static T GetManagementInfo<T>(string className, string propertyName, T defaultValue)
         {
             if (className == null)
-                throw new ArgumentNullException("className");
+                throw new ArgumentNullException(nameof(className));
 
             if (propertyName == null)
-                throw new ArgumentNullException("propertyName");
+                throw new ArgumentNullException(nameof(propertyName));
 
             try
             {

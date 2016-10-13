@@ -26,7 +26,7 @@ namespace RowShareTool
         public ErrorBox(Exception error, string errorDetails)
         {
             if (error == null)
-                throw new ArgumentNullException("error");
+                throw new ArgumentNullException(nameof(error));
 
             _error = error;
             InitializeComponent();
@@ -131,7 +131,7 @@ namespace RowShareTool
         public static bool ShowException(Exception exception, IWin32Window owner, params KeyValuePair<string, object>[] context)
         {
             if (exception == null)
-                throw new ArgumentNullException("exception");
+                throw new ArgumentNullException(nameof(exception));
 
             if (Debugger.IsAttached)
                 return false;

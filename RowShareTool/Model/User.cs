@@ -10,7 +10,7 @@ namespace RowShareTool.Model
             : base(server)
         {
             if (server == null)
-                throw new ArgumentNullException("server");
+                throw new ArgumentNullException(nameof(server));
         }
 
         [Browsable(false)]

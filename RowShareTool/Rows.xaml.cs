@@ -24,7 +24,7 @@ namespace RowShareTool
         public Rows(List list, bool showListButton)
         {
             if (list == null)
-                throw new ArgumentNullException("list");
+                throw new ArgumentNullException(nameof(list));
 
             List = list;
             InitializeComponent();

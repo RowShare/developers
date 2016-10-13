@@ -10,7 +10,7 @@ namespace RowShareTool
         public ImportOptions(ImportOptionsDefinition definition)
         {
             if (definition == null)
-                throw new ArgumentNullException("definition");
+                throw new ArgumentNullException(nameof(definition));
 
             InitializeComponent();
             DataContext = definition;

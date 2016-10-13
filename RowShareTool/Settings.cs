@@ -37,7 +37,7 @@ namespace RowShareTool
         public bool AddServer(SettingsServer server)
         {
             if (server == null)
-                throw new ArgumentNullException("server");
+                throw new ArgumentNullException(nameof(server));
 
             SettingsServer existing = GetServer(server.Url);
             if (existing != null)
@@ -50,7 +50,7 @@ namespace RowShareTool
         public SettingsServer GetServer(string url)
         {
             if (url == null)
-                throw new ArgumentNullException("url");
+                throw new ArgumentNullException(nameof(url));
 
             return _servers.Find(s => s.Url.EqualsIgnoreCase(url));
         }
@@ -58,7 +58,7 @@ namespace RowShareTool
         public bool RemoveServer(SettingsServer server)
         {
             if (server == null)
-                throw new ArgumentNullException("server");
+                throw new ArgumentNullException(nameof(server));
 
             SettingsServer existing = GetServer(server.Url);
             if (existing == null)

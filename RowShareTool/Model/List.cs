@@ -19,7 +19,7 @@ namespace RowShareTool.Model
             : base(folder, false)
         {
             if (folder == null)
-                throw new ArgumentNullException("folder");
+                throw new ArgumentNullException(nameof(folder));
 
             FolderId = folder.Id;
         }

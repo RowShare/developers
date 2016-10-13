@@ -256,7 +256,7 @@ namespace RowShareTool.Model
         public object GetValue(string columnName, object defaultValue)
         {
             if (columnName == null)
-                throw new ArgumentNullException("columnName");
+                throw new ArgumentNullException(nameof(columnName));
 
             object value;
             if (!Values.TryGetValue(columnName, out value))
@@ -268,7 +268,7 @@ namespace RowShareTool.Model
         public T GetValue<T>(string columnName, T defaultValue)
         {
             if (columnName == null)
-                throw new ArgumentNullException("columnName");
+                throw new ArgumentNullException(nameof(columnName));
 
             object value;
             if (!Values.TryGetValue(columnName, out value))

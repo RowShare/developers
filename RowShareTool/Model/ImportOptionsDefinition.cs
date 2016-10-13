@@ -9,7 +9,7 @@ namespace RowShareTool.Model
         public ImportOptionsDefinition(List list, List existingList, string newListName)
         {
             if (list == null)
-                throw new ArgumentNullException("list");
+                throw new ArgumentNullException(nameof(list));
 
             List = list;
             ExistingList = existingList;

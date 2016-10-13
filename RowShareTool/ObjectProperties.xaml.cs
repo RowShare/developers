@@ -19,7 +19,7 @@ namespace RowShareTool
         public ObjectProperties(object obj, bool readOnly, Action action)
         {
             if (obj == null)
-                throw new ArgumentNullException("obj");
+                throw new ArgumentNullException(nameof(obj));
 
             DataContext = obj;
             InitializeComponent();
@@ -56,10 +56,10 @@ namespace RowShareTool
         public void EnableExtra(string text, EventHandler onClick)
         {
             if (text == null)
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
 
             if (onClick == null)
-                throw new ArgumentNullException("onClick");
+                throw new ArgumentNullException(nameof(onClick));
 
             Extra.Content = text;
             Extra.Visibility = Visibility.Visible;

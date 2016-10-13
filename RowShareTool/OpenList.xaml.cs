@@ -10,7 +10,7 @@ namespace RowShareTool
         public OpenList(List list)
         {
             if(list == null)
-                throw new ArgumentNullException("list");
+                throw new ArgumentNullException(nameof(list));
 
             DataContext = list;
             InitializeComponent();

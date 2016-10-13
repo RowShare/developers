@@ -116,7 +116,7 @@ namespace RowShareTool.Model
         public object Call(string apiCall, object targetObject, object parent)
         {
             if (apiCall == null)
-                throw new ArgumentNullException("apiCall");
+                throw new ArgumentNullException(nameof(apiCall));
 
             var sp = new ServerCallParameters();
             sp.Api = apiCall;
@@ -126,7 +126,7 @@ namespace RowShareTool.Model
         public object Call(ServerCallParameters parameters, object targetObject, object parent)
         {
             if (parameters == null)
-                throw new ArgumentNullException("parameters");
+                throw new ArgumentNullException(nameof(parameters));
 
             using (var client = new CookieWebClient())
             {
@@ -198,7 +198,7 @@ namespace RowShareTool.Model
         public object PostCall(string apiCall, object targetObject, object parent, object data)
         {
             if (apiCall == null)
-                throw new ArgumentNullException("apiCall");
+                throw new ArgumentNullException(nameof(apiCall));
 
             var sp = new ServerCallParameters();
             sp.Api = apiCall;
@@ -208,7 +208,7 @@ namespace RowShareTool.Model
         public object PostCall(ServerCallParameters parameters, object targetObject, object parent, object data)
         {
             if (parameters == null)
-                throw new ArgumentNullException("parameters");
+                throw new ArgumentNullException(nameof(parameters));
 
             string sdata = data is string ? (string)data : JsonUtilities.Serialize(data);
             using (var client = new CookieWebClient())

@@ -120,7 +120,7 @@ namespace RowShareTool
         public static void SetCollapsed(this UIElement element, bool collapsed)
         {
             if (element == null)
-                throw new ArgumentNullException("element");
+                throw new ArgumentNullException(nameof(element));
 
             element.Visibility = collapsed ? Visibility.Collapsed : Visibility.Visible;
         }
@@ -128,7 +128,7 @@ namespace RowShareTool
         public static void SetHidden(this UIElement element, bool hidden)
         {
             if (element == null)
-                throw new ArgumentNullException("element");
+                throw new ArgumentNullException(nameof(element));
 
             element.Visibility = hidden ? Visibility.Hidden : Visibility.Visible;
         }
@@ -195,7 +195,7 @@ namespace RowShareTool
         public static string GetProduct(this Assembly assembly)
         {
             if (assembly == null)
-                throw new ArgumentNullException("assembly");
+                throw new ArgumentNullException(nameof(assembly));
 
             object[] atts = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
             if (atts != null && atts.Length > 0)
@@ -248,7 +248,7 @@ namespace RowShareTool
         public static DependencyObject GetContainerFromItem(this ItemsControl itemsControl, object item)
         {
             if (itemsControl == null)
-                throw new ArgumentNullException("itemsControl");
+                throw new ArgumentNullException(nameof(itemsControl));
 
             var container = itemsControl.ItemContainerGenerator.ContainerFromItem(item);
             if (container != null)
@@ -271,7 +271,7 @@ namespace RowShareTool
         public static void BringItemIntoView(this ItemsControl itemsControl, object item)
         {
             if (itemsControl == null)
-                throw new ArgumentNullException("itemsControl");
+                throw new ArgumentNullException(nameof(itemsControl));
 
             var container = itemsControl.GetContainerFromItem(item) as FrameworkElement;
             if (container != null)
@@ -360,7 +360,7 @@ namespace RowShareTool
         public static T FindVisualChild<T>(this DependencyObject obj, Func<T, bool> where) where T : FrameworkElement
         {
             if (where == null)
-                throw new ArgumentNullException("where");
+                throw new ArgumentNullException(nameof(where));
 
             foreach (T item in obj.EnumerateVisualChildren(true, true).OfType<T>())
             {
@@ -604,7 +604,7 @@ namespace RowShareTool
         public static void RaiseMenuItemClickOnKeyGesture(this ItemsControl control, KeyEventArgs args, bool throwOnError)
         {
             if (args == null)
-                throw new ArgumentNullException("e");
+                throw new ArgumentNullException(nameof(args));
 
             if (control == null)
                 return;
@@ -753,7 +753,7 @@ namespace RowShareTool
         public static object GetValue(this IDictionary<string, string> dictionary, string key, Type type, object defaultValue)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             object def = ConvertUtilities.ChangeType(defaultValue, type);
             if (dictionary == null)
@@ -769,7 +769,7 @@ namespace RowShareTool
         public static object GetValue(this IDictionary<string, object> dictionary, string key, Type type, object defaultValue)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             object def = ConvertUtilities.ChangeType(defaultValue, type);
             if (dictionary == null)
@@ -785,7 +785,7 @@ namespace RowShareTool
         public static T GetValue<T>(this IDictionary<string, object> dictionary, string key, T defaultValue)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             if (dictionary == null)
                 return defaultValue;
@@ -800,7 +800,7 @@ namespace RowShareTool
         public static T GetValue<T>(this IDictionary<string, string> dictionary, string key, T defaultValue)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             if (dictionary == null)
                 return defaultValue;

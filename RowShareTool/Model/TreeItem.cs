@@ -166,7 +166,7 @@ namespace RowShareTool.Model
         public virtual int CompareTo(TreeItem other)
         {
             if (other == null)
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
 
             if (DisplayName == null)
             {

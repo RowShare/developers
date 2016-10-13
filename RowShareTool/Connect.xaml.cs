@@ -4,19 +4,15 @@ using System.Windows.Input;
 
 namespace RowShareTool
 {
-    /// <summary>
-    /// Interaction logic for Connect.xaml
-    /// </summary>
     public partial class Connect : Window
     {
         public Connect(SettingsServer server)
         {
             if(server == null)
-                throw new ArgumentNullException("server");
+                throw new ArgumentNullException(nameof(server));
 
             DataContext = server;
             InitializeComponent();
-
         }
 
         protected override void OnKeyDown(KeyEventArgs e)

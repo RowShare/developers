@@ -16,7 +16,7 @@ namespace RowShareTool.Model
         public ListWithRows(List list)
         {
             if (list == null)
-                throw new ArgumentNullException("list");
+                throw new ArgumentNullException(nameof(list));
 
             List = list;
             ServerUrl = List.Parent.Server.Url;
@@ -43,13 +43,13 @@ namespace RowShareTool.Model
         public List Import(Folder folder, string targetName, ImportOptionsDefinition options)
         {
             if (folder == null)
-                throw new ArgumentNullException("folder");
+                throw new ArgumentNullException(nameof(folder));
 
             if (targetName == null)
-                throw new ArgumentNullException("targetName");
+                throw new ArgumentNullException(nameof(targetName));
 
             if (options == null)
-                throw new ArgumentNullException("options");
+                throw new ArgumentNullException(nameof(options));
 
             var newList = new List();
             if (options.ReplaceAllRows)
