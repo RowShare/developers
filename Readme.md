@@ -1,14 +1,9 @@
 # RowShare Developers
 
-This repository goal is to provide samples applications for the **[RowShare][rowshare] API**, a collaborative and intuitive tool to organize, share and centralize your information.
+This repository provide sample applications for the **[RowShare][rowshare] API**, a collaborative and intuitive tool to organize, share and centralize your information.
 
 ## RowShareTool
-**RowShareTool** is a desktop application that allow you to browse, backup and restore your [RowShare][rowshare] tables. 
-
-### Requirements
-
-* .NET 4.5 or later
-* Visual Studio 2013 or later
+**RowShareTool** is a desktop application that allow you to browse, backup and restore your [RowShare][rowshare] tables. The tool is written using .NET 4.5 and Visual Studio but the API is a JSON/REST cross platform one.
 
 ### How to use
 
