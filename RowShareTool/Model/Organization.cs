@@ -6,10 +6,8 @@ namespace RowShareTool.Model
 {
     public class Organization : TreeItem
     {
-        private Folder _rootFolder;
-
         public Organization(User user)
-            : base(user, true)
+            : base(user)
         {
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
@@ -68,39 +66,6 @@ namespace RowShareTool.Model
             get
             {
                 return RootFolderId.ToString("N");
-            }
-        }
-
-        public override void Reload()
-        {
-            _rootFolder = null;
-            ChildrenClear();
-            LoadChildren();
-        }
-
-        protected override void LoadChildren()
-        {
-            base.LoadChildren();
-            var folder = RootFolder;
-            if (folder != null)
-            {
-                Children.Add(folder);
-            }
-            OnPropertyChanged(nameof(Children));
-        }
-
-        [Browsable(false)]
-        [JsonUtilities(IgnoreWhenSerializing = true)]
-        public Folder RootFolder
-        {
-            get
-            {
-                if (_rootFolder == null && RootFolderId != Guid.Empty)
-                {
-                    _rootFolder = new Folder(this);
-                    Parent.Parent.Call("folder/load/" + RootFolderIdN, _rootFolder, null);
-                }
-                return _rootFolder;
             }
         }
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sfw="clr-namespace:SoftFluent.Windows;assembly=SoftFluent.Windows"
         mc:Ignorable="d"
-        Title="RowShare" Height="350" Width="525" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
+        Title="RowShare" Height="650" Width="725" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -14,7 +14,11 @@
         <Menu Name="MainMenu" IsMainMenu="True" Grid.Row="0">
             <MenuItem Header="_File" Height="24" SubmenuOpened="FileMenu_Opened">
                 <MenuItem Header="Add server" Click="Connect_Click" />
+                <Separator />
                 <MenuItem Name="MenuExit" Header="E_xit" InputGestureText="Alt+F4" Click="Exit_Click" />
+            </MenuItem>
+            <MenuItem Header="_Help" Height="24" SubmenuOpened="FileMenu_Opened">
+                <MenuItem Header="About..." Click="About_Click" />
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1">

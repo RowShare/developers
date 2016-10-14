@@ -273,5 +273,12 @@ namespace RowShareTool
                 }
             }
         }
+
+        private void About_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new AboutWindow();
+            dlg.Owner = this;
+            dlg.ShowDialog();
+        }
     }
 }

@@ -13,11 +13,12 @@ namespace RowShareTool.Model
         public const string CookieName = ".RSAUTH";
 
         private User _user;
-        private Folder _rootFolder;
+        private Folders _folders;
 
         public Server()
             : base(null, true)
         {
+            _folders = new Folders(this);
         }
 
         [Browsable(false)]
@@ -45,7 +46,6 @@ namespace RowShareTool.Model
 
         public override void Reload()
         {
-            _rootFolder = null;
             _user = null;
             ChildrenClear();
             LoadChildren();
@@ -56,26 +56,16 @@ namespace RowShareTool.Model
             base.LoadChildren();
             var user = User;
             Children.Add(user);
-            var folder = RootFolder;
-            if (folder != null)
-            {
-                Children.Add(folder);
-            }
+            Children.Add(_folders);
             OnPropertyChanged(nameof(Children));
         }
 
-        [Browsable(false)]
         [JsonUtilities(IgnoreWhenSerializing = true)]
-        public Folder RootFolder
+        public Folders Folders
         {
             get
             {
-                if (_rootFolder == null && User != null && User.RootFolderId != Guid.Empty)
-                {
-                    _rootFolder = new Folder(this);
-                    Call("folder/load/" + User.RootFolderIdN, _rootFolder, null);
-                }
-                return _rootFolder;
+                return Folders;
             }
         }
 

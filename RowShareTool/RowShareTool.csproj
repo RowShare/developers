@@ -69,7 +69,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\FolderOptions.cs" />
+    <Compile Include="Model\Folders.cs" />
     <Compile Include="Model\Organization.cs" />
     <Compile Include="OpenList.xaml.cs">
       <DependentUpon>OpenList.xaml</DependentUpon>
@@ -112,6 +116,10 @@
     </Compile>
     <Compile Include="Utilities\SystemInformation.cs" />
     <Compile Include="WpfExtensions.cs" />
+    <Page Include="AboutWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="OpenList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

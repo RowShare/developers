@@ -10,29 +10,15 @@ namespace RowShareTool.Model
         public Folder(TreeItem parent)
             : base(parent, true)
         {
-            Server = parent as Server;
-            IsRoot = Server != null;
-            if (Server == null)
+            Folders = parent as Folders;
+            if (Folders == null)
             {
                 ParentFolder = (Folder)parent;
-                Server = ParentFolder.Server;
-            }
-        }
-
-        public override string DisplayName
-        {
-            get
-            {
-                if (Parent is Server)
-                    return "<Root Folder>";
-
-                return "<" + base.DisplayName + ">";
+                Folders = ParentFolder.Folders;
             }
 
-            set
-            {
-                base.DisplayName = value;
-            }
+            Server = Folders.Parent;
+            IsRoot = parent is Folders;
         }
 
         public override string Url
@@ -53,6 +39,10 @@ namespace RowShareTool.Model
 
         [Browsable(false)]
         [JsonUtilities(IgnoreWhenSerializing = true)]
+        public Folders Folders { get; private set; }
+
+        [Browsable(false)]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public Folder ParentFolder { get; private set; }
 
         [JsonUtilities(IgnoreWhenSerializing = true)]
@@ -60,7 +50,7 @@ namespace RowShareTool.Model
         {
             get
             {
-                if (Parent is Server)
+                if (Parent is Folders)
                     return this;
 
                 return ParentFolder.RootFolder;
