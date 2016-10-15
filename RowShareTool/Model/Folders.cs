@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CodeFluent.Runtime.Utilities;
 
 namespace RowShareTool.Model
@@ -27,6 +24,15 @@ namespace RowShareTool.Model
         }
 
         [Browsable(false)]
+        public override string Url
+        {
+            get
+            {
+                return base.Url;
+            }
+        }
+
+        [Browsable(false)]
         [JsonUtilities(IgnoreWhenSerializing = true)]
         public Folder UserRootFolder
         {
@@ -44,8 +50,7 @@ namespace RowShareTool.Model
         public override void Reload()
         {
             _userRootFolder = null;
-            ChildrenClear();
-            LoadChildren();
+            ReloadChildren();
         }
 
         protected override void LoadChildren()

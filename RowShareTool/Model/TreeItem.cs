@@ -100,12 +100,14 @@ namespace RowShareTool.Model
             LoadChildren();
         }
 
-        public  void ChildrenClear()
+        public bool ChildrenClear()
         {
             if (HasLazyChild)
-                return;
+                return false;
 
             Children.Clear();
+            OnPropertyChanged(nameof(Children));
+            return true;
         }
 
         public virtual bool Delete()
@@ -119,8 +121,10 @@ namespace RowShareTool.Model
 
         public void ReloadChildren()
         {
-            ChildrenClear();
-            LoadChildren();
+            if (ChildrenClear())
+            {
+                LoadChildren();
+            }
         }
 
         protected virtual void LoadChildren()

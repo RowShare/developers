@@ -139,10 +139,7 @@ namespace RowShareTool.Model
         public override void Reload()
         {
             Server.Call("folder/load/" + IdN, this, null);
-            if (!HasLazyChild)
-            {
-                ReloadChildren();
-            }
+            ReloadChildren();
         }
 
         public override bool Delete()

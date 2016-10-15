@@ -63,6 +63,11 @@ namespace RowShareTool
         private void TV_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             PG.SelectedObject = e.NewValue;
+            var login = TV.GetSelectedTag<Model.Login>();
+            if (login != null)
+            {
+                Login(login.Parent);
+            }
         }
 
         protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
@@ -93,7 +98,7 @@ namespace RowShareTool
             var folder = TV.SelectedItem as Folder;
             TreeViewEditRows.SetCollapsed(list == null);
             TreeViewImportList.SetCollapsed(folder == null);
-            TreeViewDelete.IsEnabled = server != null || list != null || (folder != null && !folder.IsRoot);
+            TreeViewDelete.IsEnabled = server != null || list != null || (folder != null && !folder.IsRoot && (folder.Options & FolderOptions.Undeletable) != FolderOptions.Undeletable);
 
             TreeViewLogin.SetCollapsed(server == null);
             TreeViewLogout.SetCollapsed(server == null);
@@ -206,9 +211,8 @@ namespace RowShareTool
             }
         }
 
-        private void TreeViewLogin_Click(object sender, RoutedEventArgs e)
+        private void Login(Server server)
         {
-            var server = TV.SelectedItem as Server;
             if (server == null)
                 return;
 
@@ -221,6 +225,11 @@ namespace RowShareTool
                 Settings.SerializeToConfiguration();
                 server.Reload();
             }
+        }
+
+        private void TreeViewLogin_Click(object sender, RoutedEventArgs e)
+        {
+            Login(TV.SelectedItem as Server);
         }
 
         private void TreeViewLogout_Click(object sender, RoutedEventArgs e)
@@ -250,7 +259,7 @@ namespace RowShareTool
 
         private void TreeViewOpenList_Click(object sender, RoutedEventArgs e)
         {
-            var server = TV.GetSelectedTag<Server>();
+            var server = TV.GetSelectedTag<Server>(true);
             if (server == null)
                 return;
 

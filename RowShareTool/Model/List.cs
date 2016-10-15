@@ -58,6 +58,7 @@ namespace RowShareTool.Model
             }
         }
 
+        [Browsable(false)]
         [DisplayName("Folder Id")]
         [JsonUtilities(IgnoreWhenSerializing = true)]
         public string FolderIdN
@@ -81,6 +82,7 @@ namespace RowShareTool.Model
             }
         }
 
+        [Browsable(false)]
         [DisplayName("RowDescriptor Id")]
         [JsonUtilities(IgnoreWhenSerializing = true)]
         public string RowDescriptorIdN
@@ -104,6 +106,7 @@ namespace RowShareTool.Model
             }
         }
 
+        [Browsable(false)]
         [DisplayName("Organization Id")]
         [JsonUtilities(IgnoreWhenSerializing = true)]
         public string OrganizationIdN

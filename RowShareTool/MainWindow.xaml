@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <Menu Name="MainMenu" IsMainMenu="True" Grid.Row="0">
             <MenuItem Header="_File" Height="24" SubmenuOpened="FileMenu_Opened">
-                <MenuItem Header="Add server" Click="Connect_Click" />
+                <MenuItem Header="Add RowShare server" Click="Connect_Click" />
                 <Separator />
                 <MenuItem Name="MenuExit" Header="E_xit" InputGestureText="Alt+F4" Click="Exit_Click" />
             </MenuItem>
@@ -36,7 +36,7 @@
                         <Separator />
                         <MenuItem Header="Edit Rows..." Name="TreeViewEditRows" Click="TreeViewEditRows_Click" />
                         <MenuItem Header="Import Table..." Name="TreeViewImportList" Click="TreeViewImportList_Click" />
-                        <MenuItem Header="Open Table..." Name="TreeViewOpenList" Click="TreeViewOpenList_Click" />
+                        <MenuItem Header="Open Table by Id..." Name="TreeViewOpenList" Click="TreeViewOpenList_Click" />
                         <MenuItem Header="Delete..." Name="TreeViewDelete" Click="TreeViewDelete_Click" />
                         <Separator />
                         <MenuItem Header="Refresh" Name="TreeViewRefresh" Click="TreeViewRefresh_Click" />

@@ -47,25 +47,36 @@ namespace RowShareTool.Model
         public override void Reload()
         {
             _user = null;
-            ChildrenClear();
-            LoadChildren();
+            if (ChildrenClear())
+            {
+                LoadChildren();
+            }
         }
 
         protected override void LoadChildren()
         {
             base.LoadChildren();
             var user = User;
-            Children.Add(user);
-            Children.Add(_folders);
+            if (user != null)
+            {
+                Children.Add(user);
+                Children.Add(_folders);
+            }
+            else
+            {
+                var login = new Login(this);
+                Children.Add(login);
+            }
             OnPropertyChanged(nameof(Children));
         }
 
         [JsonUtilities(IgnoreWhenSerializing = true)]
+        [Browsable(false)]
         public Folders Folders
         {
             get
             {
-                return Folders;
+                return _folders;
             }
         }
 
@@ -77,8 +88,9 @@ namespace RowShareTool.Model
             {
                 if (_user == null)
                 {
-                    _user = new User(this);
-                    Call("user", _user, null);
+                    var user = new User(this);
+                    Call("user", user, null);
+                    _user = !string.IsNullOrWhiteSpace(user.Email) ? user : null;
                 }
                 return _user;
             }
