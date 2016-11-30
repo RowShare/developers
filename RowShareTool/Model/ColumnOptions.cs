@@ -39,5 +39,9 @@ namespace RowShareTool.Model
         IsTask = 16384,
 
         IsVote = 32768,
+
+        IsUserHidden = 65536,
+
+        IsUserReadOnly = 131072,
     }
 }
