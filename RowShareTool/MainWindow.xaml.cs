@@ -14,6 +14,8 @@ namespace RowShareTool
 {
     public partial class MainWindow : Window
     {
+        private Folder _currentCopyFromFolder;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -99,6 +101,8 @@ namespace RowShareTool
             TreeViewEditRows.SetCollapsed(list == null);
             TreeViewImportList.SetCollapsed(folder == null);
             TreeViewDelete.IsEnabled = server != null || list != null || (folder != null && !folder.IsRoot && (folder.Options & FolderOptions.Undeletable) != FolderOptions.Undeletable);
+            TreeViewCopyFrom.IsEnabled = folder != null;
+            TreeViewCopyTo.IsEnabled = folder != null && _currentCopyFromFolder != null && folder.Server.CompareTo(_currentCopyFromFolder.Server) != 0;
 
             TreeViewLogin.SetCollapsed(server == null);
             TreeViewLogout.SetCollapsed(server == null);
@@ -182,6 +186,34 @@ namespace RowShareTool
             if (item != null)
             {
                 item.Reload();
+            }
+        }
+        private void TreeViewCopyFrom_Click(object sender, RoutedEventArgs e)
+        {
+            var folder = TV.GetSelectedTag<Folder>();
+            if (folder == null)
+                return;
+
+            _currentCopyFromFolder = folder;
+        }
+        private void TreeViewCopyTo_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentCopyFromFolder == null)
+                return;
+
+            var folder = TV.GetSelectedTag<Folder>();
+            if (folder == null)
+                return;
+
+            var importer = new FolderImporter(_currentCopyFromFolder, folder);
+            var result = importer.CopyAllContent();
+            if (result)
+            {
+                MessageBox.Show("Success", "RowShareTool", MessageBoxButton.OK);
+            }
+            else
+            {
+                MessageBox.Show("Error", "RowShareTool", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

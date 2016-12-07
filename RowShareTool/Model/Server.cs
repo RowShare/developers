@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using CodeFluent.Runtime.Utilities;
 using CodeFluent.Runtime.Web.Utilities;
@@ -14,11 +18,18 @@ namespace RowShareTool.Model
 
         private User _user;
         private Folders _folders;
+        private bool _showMessageBoxOnError = true;
 
         public Server()
             : base(null, true)
         {
             _folders = new Folders(this);
+        }
+
+        public bool ShowMessageBoxOnError
+        {
+            get { return _showMessageBoxOnError; }
+            set { _showMessageBoxOnError = value; }
         }
 
         [Browsable(false)]
@@ -157,8 +168,11 @@ namespace RowShareTool.Model
                 }
                 catch (WebException e)
                 {
-                    var eb = new ErrorBox(e, e.GetErrorText(null));
-                    eb.ShowDialog();
+                    if (ShowMessageBoxOnError)
+                    {
+                        var eb = new ErrorBox(e, e.GetErrorText(null));
+                        eb.ShowDialog();
+                    }
                     throw;
                 }
 
@@ -212,7 +226,7 @@ namespace RowShareTool.Model
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            string sdata = data is string ? (string)data : JsonUtilities.Serialize(data);
+            string sdata = SerializeData(data);
             using (var client = new CookieWebClient())
             {
                 if (Cookie != null)
@@ -236,8 +250,11 @@ namespace RowShareTool.Model
                 }
                 catch (WebException e)
                 {
-                    var eb = new ErrorBox(e, e.GetErrorText(null));
-                    eb.ShowDialog();
+                    if (ShowMessageBoxOnError)
+                    {
+                        var eb = new ErrorBox(e, e.GetErrorText(null));
+                        eb.ShowDialog();
+                    }
                     throw;
                 }
 
@@ -259,6 +276,171 @@ namespace RowShareTool.Model
                 }
                 return JsonUtilities.Deserialize(s);
             }
+        }
+
+        public object PostBlobCall(string apiCall, object targetObject, object parent, object data, Blob blob)
+        {
+            if (apiCall == null)
+                throw new ArgumentNullException(nameof(apiCall));
+            if (blob == null)
+                throw new ArgumentNullException(nameof(blob));
+
+            var sp = new ServerCallParameters();
+            sp.Api = apiCall;
+            return PostBlobCall(sp, targetObject, parent, data, new[] { blob });
+        }
+
+        public object PostBlobCall(ServerCallParameters parameters, object targetObject, object parent, object data, IEnumerable<Blob> blobs)
+        {
+            if (parameters == null)
+                throw new ArgumentNullException(nameof(parameters));
+
+            if (blobs == null)
+                throw new ArgumentNullException(nameof(blobs));
+
+            string sdata = SerializeData(data);
+
+            using (var httpHandler = new HttpClientHandler())
+            using (var client = new HttpClient(httpHandler))
+            {
+                if (Cookie != null)
+                {
+                    httpHandler.CookieContainer.Add(new Cookie(CookieName, Cookie, "/", new Uri(Url).Host));
+                }
+                var uri = new EditableUri(Url + "/api/" + parameters.Api);
+
+                if (parameters.Lcid != 0)
+                {
+                    uri.Parameters["l"] = parameters.Lcid;
+                }
+
+                var message = new HttpRequestMessage(HttpMethod.Post, uri.ToString());
+
+                var mpfdContent = new MultipartFormDataContent();
+                mpfdContent.Add(new StringContent(sdata, Encoding.UTF8, "application/json"), "data");
+
+                foreach (var blob in blobs)
+                {
+                    var byteArrayContent = new StreamContent(File.Open(blob.TempFilePath, FileMode.Open, FileAccess.Read));
+                    byteArrayContent.Headers.ContentType = new MediaTypeHeaderValue(blob.ContentType);
+
+                    mpfdContent.Add(byteArrayContent, blob.ColumnName, blob.FileName);
+                }
+
+                message.Content = mpfdContent;
+
+                string s;
+                try
+                {
+                    var result = client.SendAsync(message).Result;
+                    s = result.Content.ReadAsStringAsync().Result;
+                    if (!result.IsSuccessStatusCode)
+                    {
+                        var x = s.Length + 2;
+                    }
+                    result.EnsureSuccessStatusCode();
+                }
+                catch (AggregateException agg)
+                {
+                    if (ShowMessageBoxOnError)
+                    {
+                        agg.Handle(e =>
+                        {
+                            var we = e as WebException;
+                            if (we != null)
+                            {
+                                var eb = new ErrorBox(e, e.GetErrorText(null));
+                                eb.ShowDialog();
+                            }
+                            return false;
+                        });
+                    }
+                    throw;
+                }
+                catch (HttpRequestException e)
+                {
+                    if (ShowMessageBoxOnError)
+                    {
+                        var eb = new ErrorBox(e, e.GetErrorText(null));
+                        eb.ShowDialog();
+                    }
+                    throw;
+                }
+
+                var options = new JsonUtilitiesOptions();
+                options.CreateInstanceCallback = (e) =>
+                {
+                    var type = (Type)e.Value;
+                    if (typeof(TreeItem).IsAssignableFrom(type))
+                    {
+                        e.Value = Activator.CreateInstance(type, new object[] { parent });
+                        e.Handled = true;
+                    }
+                };
+
+                if (targetObject != null)
+                {
+                    JsonUtilities.Deserialize(s, targetObject, options);
+                    return null;
+                }
+                return JsonUtilities.Deserialize(s);
+            }
+        }
+
+        public string DownloadCall(string apiCall)
+        {
+            if (apiCall == null)
+                throw new ArgumentNullException(nameof(apiCall));
+
+            var sp = new ServerCallParameters();
+            sp.Api = apiCall;
+            return DownloadCall(sp);
+        }
+
+        public string DownloadCall(ServerCallParameters parameters)
+        {
+            if (parameters == null)
+                throw new ArgumentNullException(nameof(parameters));
+
+            using (var client = new CookieWebClient())
+            {
+                if (Cookie != null)
+                {
+                    client.Cookies.Add(new Cookie(CookieName, Cookie, "/", new Uri(Url).Host));
+                }
+
+                var uri = new EditableUri(Url + "/" + parameters.Api);
+                if (!string.IsNullOrWhiteSpace(parameters.Format))
+                {
+                    uri.Parameters["f"] = parameters.Format;
+                }
+
+                if (parameters.Lcid != 0)
+                {
+                    uri.Parameters["l"] = parameters.Lcid;
+                }
+
+                try
+                {
+                    var filePath = LongPath.GetTempFileName();
+                    client.DownloadFile(uri.ToString(), filePath);
+                    return filePath;
+                }
+                catch (WebException e)
+                {
+                    if (ShowMessageBoxOnError)
+                    {
+                        var eb = new ErrorBox(e, e.GetErrorText(null));
+                        eb.ShowDialog();
+                    }
+                    throw;
+                }
+            }
+        }
+
+        private string SerializeData(object data)
+        {
+            return data is string ? (string)data : JsonUtilities.Serialize(data, JsonSerializationOptions.Default | JsonSerializationOptions.DateFormatIso8601);
         }
     }
 }

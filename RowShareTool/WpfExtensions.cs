@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -287,7 +289,7 @@ namespace RowShareTool
 
             if (VisualTreeHelper.GetChildrenCount(visual) == 0)
                 return null;
-            
+
             return VisualTreeHelper.GetChild(visual, 0);
         }
 
@@ -650,6 +652,11 @@ namespace RowShareTool
             return Imaging.CreateBitmapSourceFromHIcon(WindowsUtilities.GetStockIcon(id, flags).Handle, Int32Rect.Empty, null);
         }
 
+        public static string GetErrorText(this Exception exception)
+        {
+            return GetErrorText(exception, null);
+        }
+
         public static string GetErrorText(this Exception exception, JsonUtilitiesOptions options)
         {
             if (exception == null)
@@ -674,22 +681,36 @@ namespace RowShareTool
                         if (we.Response.Headers[HttpResponseHeader.ContentType] == "application/json" && extra != null)
                         {
                             options.ThrowExceptions = false;
-                            var dic = (Dictionary<string, object>)JsonUtilities.Deserialize(extra, null, options);
+                            var dic = (Dictionary<string, object>) JsonUtilities.Deserialize(extra, null, options);
                             object ex;
                             if (dic.TryGetValue("Exception", out ex))
                             {
                                 if (ex != null)
                                 {
-                                    extra = string.Format("{0}", ex);
+                                    var dictionary = ex as Dictionary<string, object>;
+                                    if (dictionary != null)
+                                    {
+                                        var sb = new StringBuilder();
+                                        foreach (var item in dictionary)
+                                        {
+                                            sb.AppendLine(string.Format("[{0}]={1}", item.Key, item.Value));
+                                        }
+                                        extra = sb.ToString();
+                                    }
+                                    else
+                                    {
+                                        extra = string.Format("{0}", ex);
+                                    }
                                 }
                                 else
                                 {
                                     // try without deserialization
                                     options.SerializationOptions &= ~JsonSerializationOptions.UseISerializable;
-                                    var dic2 = (Dictionary<string, object>)JsonUtilities.Deserialize(extra, null, options);
+                                    var dic2 =
+                                        (Dictionary<string, object>) JsonUtilities.Deserialize(extra, null, options);
                                     if (dic2.TryGetValue("Exception", out ex) && ex is IDictionary<string, object>)
                                     {
-                                        var dicex = (IDictionary<string, object>)ex;
+                                        var dicex = (IDictionary<string, object>) ex;
                                         var sb = new StringBuilder(Environment.NewLine);
                                         sb.AppendLine("Source: " + dicex.GetValue<string>("Source", null));
                                         sb.AppendLine("Message: " + dicex.GetValue<string>("Message", null));
