@@ -121,6 +121,14 @@ namespace RowShareTool.Model
             return list;
         }
 
+        public Server Clone()
+        {
+            var clone = new Server();
+            clone.DisplayName = this.DisplayName;
+            clone.Cookie = this.Cookie;
+            return clone;
+        }
+
         public object Call(ServerCallParameters parameters, object parent)
         {
             return Call(parameters, null, parent);

@@ -73,6 +73,10 @@
     <Compile Include="AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ImportFolder.xaml.cs">
+      <DependentUpon>ImportFolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Blob.cs" />
     <Compile Include="Model\FolderImporter.cs" />
     <Compile Include="Model\FolderOptions.cs" />
     <Compile Include="Model\Folders.cs" />
@@ -122,6 +126,10 @@
     <Page Include="AboutWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ImportFolder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="OpenList.xaml">
       <Generator>MSBuild:Compile</Generator>

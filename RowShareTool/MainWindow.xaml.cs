@@ -206,15 +206,8 @@ namespace RowShareTool
                 return;
 
             var importer = new FolderImporter(_currentCopyFromFolder, folder);
-            var result = importer.CopyAllContent();
-            if (result)
-            {
-                MessageBox.Show("Success", "RowShareTool", MessageBoxButton.OK);
-            }
-            else
-            {
-                MessageBox.Show("Error", "RowShareTool", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            var popup = new ImportFolder(importer);
+            popup.ShowDialog();
         }
 
         private void TreeViewDelete_Click(object sender, RoutedEventArgs e)
