@@ -99,10 +99,22 @@ namespace RowShareTool.Model
             inputFolder.LazyLoadChildren();
             foreach (var childList in inputFolder.Children.OfType<List>())
             {
-                CopyList(childList, outputFolder);
+                try
+                {
+                    CopyList(childList, outputFolder);
+                }
+                catch (Exception ex)
+                {
+                    AddError(
+                        ex,
+                        folderId: childList.Parent.IdN,
+                        folderName: childList.Parent.DisplayName,
+                        listId: childList.IdN,
+                        listName: childList.DisplayName);
+                }
             }
 
-            AddMessage("Folder finished",
+            AddMessage("Folder processed",
                 folderId: inputFolder.IdN,
                 folderName: inputFolder.DisplayName);
         }
@@ -149,6 +161,12 @@ namespace RowShareTool.Model
 
             if (outputList == null)
             {
+                AddMessage("List saving",
+                    folderId: inputList.Parent.IdN,
+                    folderName: inputList.Parent.DisplayName,
+                    listId: inputList.IdN,
+                    listName: inputList.DisplayName);
+
                 outputList = new List(targetFolder);
 
                 var server = targetFolder.Server;
@@ -164,9 +182,8 @@ namespace RowShareTool.Model
                     //AllowPublic = inputList.AllowPublic,
                     //ShowTotals = inputList.ShowTotals,
                     Summary = inputList.Summary,
-                    //ColorOrDefault = inputList.ColorOrDefault,
+                    ColorOrDefault = inputList.Color,
                     CategoryId = inputList.CategoryId,
-                    //ColorOrDefault = inputList.ColorOrDefault,
                 };
                 server.PostCall("list/save", outputList, targetFolder, data);
 
@@ -181,6 +198,8 @@ namespace RowShareTool.Model
                 {
                     AddError(
                         ex,
+                        folderId: inputList.Parent.IdN,
+                        folderName: inputList.Parent.DisplayName,
                         listId: inputList.IdN,
                         listName: inputList.DisplayName);
                 }
@@ -260,7 +279,7 @@ namespace RowShareTool.Model
                         var dico = inputRow.GetValue<Dictionary<string, object>>(column.Name, null);
                         if (dico != null)
                         {
-                            blobs.Add(new Blob(dico, column.Name, inputServer));
+                            blobs.Add(new Blob(dico, column, inputRow, inputServer));
                         }
                         continue;
                     }
@@ -283,6 +302,8 @@ namespace RowShareTool.Model
                 {
                     AddError(
                         ex,
+                        folderId: inputList.Parent.IdN,
+                        folderName: inputList.Parent.DisplayName,
                         listId: inputList.IdN,
                         listName: inputList.DisplayName,
                         rowId: inputRow.IdN,
@@ -310,6 +331,8 @@ namespace RowShareTool.Model
                     {
                         AddError(
                             ex,
+                            folderId: inputList.Parent.IdN,
+                            folderName: inputList.Parent.DisplayName,
                             listId: inputList.IdN,
                             listName: inputList.DisplayName,
                             rowId: inputRow.IdN,

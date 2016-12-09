@@ -6,17 +6,20 @@ namespace RowShareTool.Model
 {
     public class Blob
     {
-        public Blob(Dictionary<string, object> dico, string columnName, Server server)
+        public Blob(Dictionary<string, object> dico, Column column, Row row, Server server)
         {
             if (dico == null)
                 throw new ArgumentNullException(nameof(dico));
-            if (columnName == null)
-                throw new ArgumentNullException(nameof(columnName));
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+            if (row == null)
+                throw new ArgumentNullException(nameof(row));
             if (server == null)
                 throw new ArgumentNullException(nameof(server));
 
             JsonUtilities.Apply(dico, this, new JsonUtilitiesOptions());
-            ColumnName = columnName;
+            Column = column;
+            Row = row;
             Server = server;
         }
         public string ContentType { get; set; }
@@ -25,10 +28,17 @@ namespace RowShareTool.Model
         public long Size { get; set; }
         public DateTime LastWriteTimeUtc { get; set; }
 
-        public string ColumnName { get; private set; }
+        public Column Column { get; private set; }
+        public Row Row { get; private set; }
         public Server Server { get; private set; }
 
         public string TempFilePath { get; private set; }
+
+        public string ColumnName
+        {
+            get { return Column.Name; }
+        }
+        public string RowImageUrl { get { return "/blob/" + Row.IdN + Column.Index + "/" + (int)BlobUrlType.Raw + "/"; } }
 
         public override string ToString()
         {
@@ -37,7 +47,16 @@ namespace RowShareTool.Model
 
         public void DownloadFile()
         {
-            TempFilePath = Server.DownloadCall(ImageUrl);
+            TempFilePath = Server.DownloadCall(RowImageUrl);
+        }
+
+        private enum BlobUrlType
+        {
+            Image = 0,
+            Thumbnail = 1,
+            FileExtension = 2,
+            FileExtensionSmall = 3,
+            Raw = 4,
         }
     }
 }

@@ -30,9 +30,10 @@ namespace RowShareTool
             InitializeComponent();
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        private async void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             DataGrid.ItemsSource = _messages;
+            await StartImport();
         }
 
         private void OnMessage(object sender, FolderImporterEventArgs e)
@@ -52,6 +53,11 @@ namespace RowShareTool
         }
 
         private async void StartButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await StartImport();
+        }
+
+        private async Task StartImport()
         {
             _messages.Clear();
 

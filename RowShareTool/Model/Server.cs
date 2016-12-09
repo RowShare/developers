@@ -322,19 +322,18 @@ namespace RowShareTool.Model
                     uri.Parameters["l"] = parameters.Lcid;
                 }
 
-                var message = new HttpRequestMessage(HttpMethod.Post, uri.ToString());
-
                 var mpfdContent = new MultipartFormDataContent();
                 mpfdContent.Add(new StringContent(sdata, Encoding.UTF8, "application/json"), "data");
 
                 foreach (var blob in blobs)
                 {
-                    var byteArrayContent = new StreamContent(File.Open(blob.TempFilePath, FileMode.Open, FileAccess.Read));
-                    byteArrayContent.Headers.ContentType = new MediaTypeHeaderValue(blob.ContentType);
+                    var streamContent = new StreamContent(File.Open(blob.TempFilePath, FileMode.Open, FileAccess.Read));
+                    streamContent.Headers.ContentType = new MediaTypeHeaderValue(blob.ContentType);
 
-                    mpfdContent.Add(byteArrayContent, blob.ColumnName, blob.FileName);
+                    mpfdContent.Add(streamContent, blob.ColumnName, ConvertUtilities.RemoveDiacritics(blob.FileName));
                 }
 
+                var message = new HttpRequestMessage(HttpMethod.Post, uri.ToString());
                 message.Content = mpfdContent;
 
                 string s;
@@ -417,7 +416,7 @@ namespace RowShareTool.Model
                     client.Cookies.Add(new Cookie(CookieName, Cookie, "/", new Uri(Url).Host));
                 }
 
-                var uri = new EditableUri(Url + "/" + parameters.Api);
+                var uri = new EditableUri(Url + parameters.Api);
                 if (!string.IsNullOrWhiteSpace(parameters.Format))
                 {
                     uri.Parameters["f"] = parameters.Format;
