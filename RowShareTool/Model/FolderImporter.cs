@@ -268,6 +268,7 @@ namespace RowShareTool.Model
             {
                 var values = new Dictionary<string, object>();
                 var blobs = new List<Blob>();
+                var mandatoryBlobs = new List<Blob>();
 
                 foreach (var column in inputList.Columns)
                 {
@@ -279,7 +280,16 @@ namespace RowShareTool.Model
                         var dico = inputRow.GetValue<Dictionary<string, object>>(column.Name, null);
                         if (dico != null)
                         {
-                            blobs.Add(new Blob(dico, column, inputRow, inputServer));
+                            var blob = new Blob(dico, column, inputRow, inputServer);
+                            bool isMandatoryBlob = (column.Options & ColumnOptions.IsMandatory) == ColumnOptions.IsMandatory;
+                            if (isMandatoryBlob)
+                            {
+                                mandatoryBlobs.Add(blob);
+                            }
+                            else
+                            {
+                                blobs.Add(blob);
+                            }
                         }
                         continue;
                     }
@@ -289,14 +299,25 @@ namespace RowShareTool.Model
                 var outputRow = new Row(targetList);
                 var newRowData = new
                 {
-                    Id = (string)null,
                     ListId = targetList.IdN,
                     Values = values,
                 };
 
                 try
                 {
-                    outputServer.PostCall("row/save", outputRow, targetList, newRowData);
+                    if (mandatoryBlobs.Count == 0)
+                    {
+                        outputServer.PostCall("row/save", outputRow, targetList, newRowData);
+                    }
+                    else
+                    {
+                        foreach (var blob in mandatoryBlobs)
+                        {
+                            blob.DownloadFile();
+                        }
+
+                        outputServer.PostBlobCall("row/save", outputRow, targetList, newRowData, mandatoryBlobs);
+                    }
                 }
                 catch (Exception ex)
                 {

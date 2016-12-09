@@ -298,6 +298,18 @@ namespace RowShareTool.Model
             return PostBlobCall(sp, targetObject, parent, data, new[] { blob });
         }
 
+        public object PostBlobCall(string apiCall, object targetObject, object parent, object data, IEnumerable<Blob> blobs)
+        {
+            if (apiCall == null)
+                throw new ArgumentNullException(nameof(apiCall));
+            if (blobs == null)
+                throw new ArgumentNullException(nameof(blobs));
+
+            var sp = new ServerCallParameters();
+            sp.Api = apiCall;
+            return PostBlobCall(sp, targetObject, parent, data, blobs);
+        }
+
         public object PostBlobCall(ServerCallParameters parameters, object targetObject, object parent, object data, IEnumerable<Blob> blobs)
         {
             if (parameters == null)
@@ -327,6 +339,9 @@ namespace RowShareTool.Model
 
                 foreach (var blob in blobs)
                 {
+                    if(string.IsNullOrEmpty(blob.TempFilePath))
+                        continue;
+
                     var streamContent = new StreamContent(File.Open(blob.TempFilePath, FileMode.Open, FileAccess.Read));
                     streamContent.Headers.ContentType = new MediaTypeHeaderValue(blob.ContentType);
 
