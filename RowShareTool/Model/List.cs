@@ -295,6 +295,18 @@ namespace RowShareTool.Model
             }
         }
 
+        public string IconPath
+        {
+            get
+            {
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
         public ObservableCollection<Column> Columns
         {
             get

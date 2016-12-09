@@ -205,6 +205,8 @@ namespace RowShareTool.Model
                 }
                 outputList.Reload();
 
+                CopyListIcon(inputList, outputList);
+
                 AddMessage("List saved",
                     folderId: inputList.Parent.IdN,
                     folderName: inputList.Parent.DisplayName,
@@ -214,6 +216,31 @@ namespace RowShareTool.Model
             else
             {
                 AddMessage("List skipped",
+                    folderId: inputList.Parent.IdN,
+                    folderName: inputList.Parent.DisplayName,
+                    listId: inputList.IdN,
+                    listName: inputList.DisplayName);
+            }
+        }
+
+        private void CopyListIcon(List inputList, List targetList)
+        {
+            try
+            {
+                var inputServer = inputList.Parent.Server;
+                var outputServer = targetList.Parent.Server;
+                if (string.IsNullOrEmpty(inputList.IconPath))
+                    return;
+
+                var listIcon = new ListIcon(inputList);
+                listIcon.DownloadFile();
+
+                outputServer.PostBlobCall("list/save/" + targetList.IdN + "/icon", null, null, null, listIcon);
+            }
+            catch (Exception ex)
+            {
+                AddError(
+                    ex,
                     folderId: inputList.Parent.IdN,
                     folderName: inputList.Parent.DisplayName,
                     listId: inputList.IdN,
@@ -359,7 +386,7 @@ namespace RowShareTool.Model
                             rowId: inputRow.IdN,
                             rowName: inputRow.DisplayName,
                             blobId: blob.ImageUrl,
-                            blobName: blob.ColumnName);
+                            blobName: ((IUploadableFile)blob).FormName);
                     }
                 }
             }

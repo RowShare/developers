@@ -4,8 +4,12 @@ using CodeFluent.Runtime.Utilities;
 
 namespace RowShareTool.Model
 {
-    public class Blob
+    public class Blob : IUploadableFile
     {
+        private Server _server;
+        private Column _column;
+        private Row _row;
+
         public Blob(Dictionary<string, object> dico, Column column, Row row, Server server)
         {
             if (dico == null)
@@ -18,27 +22,24 @@ namespace RowShareTool.Model
                 throw new ArgumentNullException(nameof(server));
 
             JsonUtilities.Apply(dico, this, new JsonUtilitiesOptions());
-            Column = column;
-            Row = row;
-            Server = server;
+            _column = column;
+            _row = row;
+            _server = server;
         }
+
         public string ContentType { get; set; }
         public string FileName { get; set; }
         public string ImageUrl { get; set; }
         public long Size { get; set; }
         public DateTime LastWriteTimeUtc { get; set; }
 
-        public Column Column { get; private set; }
-        public Row Row { get; private set; }
-        public Server Server { get; private set; }
-
         public string TempFilePath { get; private set; }
+        public string RowImageUrl { get { return "/blob/" + _row.IdN + _column.Index + "/" + (int)BlobUrlType.Raw + "/"; } }
 
-        public string ColumnName
+        string IUploadableFile.FormName
         {
-            get { return Column.Name; }
+            get { return _column.Name; }
         }
-        public string RowImageUrl { get { return "/blob/" + Row.IdN + Column.Index + "/" + (int)BlobUrlType.Raw + "/"; } }
 
         public override string ToString()
         {
@@ -47,7 +48,7 @@ namespace RowShareTool.Model
 
         public void DownloadFile()
         {
-            TempFilePath = Server.DownloadCall(RowImageUrl);
+            TempFilePath = _server.DownloadCall(RowImageUrl);
         }
 
         private enum BlobUrlType

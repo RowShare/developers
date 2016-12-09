@@ -80,6 +80,8 @@
     <Compile Include="Model\FolderImporter.cs" />
     <Compile Include="Model\FolderOptions.cs" />
     <Compile Include="Model\Folders.cs" />
+    <Compile Include="Model\IUploadableFile.cs" />
+    <Compile Include="Model\ListIcon.cs" />
     <Compile Include="Model\Login.cs" />
     <Compile Include="Model\Organization.cs" />
     <Compile Include="OpenList.xaml.cs">

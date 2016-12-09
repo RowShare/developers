@@ -286,37 +286,37 @@ namespace RowShareTool.Model
             }
         }
 
-        public object PostBlobCall(string apiCall, object targetObject, object parent, object data, Blob blob)
+        public object PostBlobCall(string apiCall, object targetObject, object parent, object data, IUploadableFile file)
         {
             if (apiCall == null)
                 throw new ArgumentNullException(nameof(apiCall));
-            if (blob == null)
-                throw new ArgumentNullException(nameof(blob));
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
 
             var sp = new ServerCallParameters();
             sp.Api = apiCall;
-            return PostBlobCall(sp, targetObject, parent, data, new[] { blob });
+            return PostBlobCall(sp, targetObject, parent, data, new[] { file });
         }
 
-        public object PostBlobCall(string apiCall, object targetObject, object parent, object data, IEnumerable<Blob> blobs)
+        public object PostBlobCall(string apiCall, object targetObject, object parent, object data, IEnumerable<IUploadableFile> files)
         {
             if (apiCall == null)
                 throw new ArgumentNullException(nameof(apiCall));
-            if (blobs == null)
-                throw new ArgumentNullException(nameof(blobs));
+            if (files == null)
+                throw new ArgumentNullException(nameof(files));
 
             var sp = new ServerCallParameters();
             sp.Api = apiCall;
-            return PostBlobCall(sp, targetObject, parent, data, blobs);
+            return PostBlobCall(sp, targetObject, parent, data, files);
         }
 
-        public object PostBlobCall(ServerCallParameters parameters, object targetObject, object parent, object data, IEnumerable<Blob> blobs)
+        public object PostBlobCall(ServerCallParameters parameters, object targetObject, object parent, object data, IEnumerable<IUploadableFile> files)
         {
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            if (blobs == null)
-                throw new ArgumentNullException(nameof(blobs));
+            if (files == null)
+                throw new ArgumentNullException(nameof(files));
 
             string sdata = SerializeData(data);
 
@@ -335,9 +335,12 @@ namespace RowShareTool.Model
                 }
 
                 var mpfdContent = new MultipartFormDataContent();
-                mpfdContent.Add(new StringContent(sdata, Encoding.UTF8, "application/json"), "data");
+                if (sdata != null)
+                {
+                    mpfdContent.Add(new StringContent(sdata, Encoding.UTF8, "application/json"), "data");
+                }
 
-                foreach (var blob in blobs)
+                foreach (var blob in files)
                 {
                     if(string.IsNullOrEmpty(blob.TempFilePath))
                         continue;
@@ -345,7 +348,7 @@ namespace RowShareTool.Model
                     var streamContent = new StreamContent(File.Open(blob.TempFilePath, FileMode.Open, FileAccess.Read));
                     streamContent.Headers.ContentType = new MediaTypeHeaderValue(blob.ContentType);
 
-                    mpfdContent.Add(streamContent, blob.ColumnName, ConvertUtilities.RemoveDiacritics(blob.FileName));
+                    mpfdContent.Add(streamContent, blob.FormName, ConvertUtilities.RemoveDiacritics(blob.FileName));
                 }
 
                 var message = new HttpRequestMessage(HttpMethod.Post, uri.ToString());
@@ -356,10 +359,6 @@ namespace RowShareTool.Model
                 {
                     var result = client.SendAsync(message).Result;
                     s = result.Content.ReadAsStringAsync().Result;
-                    if (!result.IsSuccessStatusCode)
-                    {
-                        var x = s.Length + 2;
-                    }
                     result.EnsureSuccessStatusCode();
                 }
                 catch (AggregateException agg)
@@ -431,7 +430,15 @@ namespace RowShareTool.Model
                     client.Cookies.Add(new Cookie(CookieName, Cookie, "/", new Uri(Url).Host));
                 }
 
-                var uri = new EditableUri(Url + parameters.Api);
+
+                string url = parameters.Api;
+                if (parameters.Api != null && !parameters.Api.StartsWith("/"))
+                {
+                    url = "/" + url;
+                }
+
+                var uri =
+                    new EditableUri(Url + url);
                 if (!string.IsNullOrWhiteSpace(parameters.Format))
                 {
                     uri.Parameters["f"] = parameters.Format;
