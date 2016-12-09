@@ -307,6 +307,42 @@ namespace RowShareTool.Model
             }
         }
 
+        public bool AllowPublic
+        {
+            get
+            {
+                return GetProperty<bool>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public bool ShowTotals
+        {
+            get
+            {
+                return GetProperty<bool>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
+        public bool OneRowMaximumPerUser
+        {
+            get
+            {
+                return GetProperty<bool>();
+            }
+            set
+            {
+                SetProperty(value);
+            }
+        }
+
         public ObservableCollection<Column> Columns
         {
             get
