@@ -272,6 +272,7 @@ namespace RowShareTool
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
             var server = new SettingsServer();
+            server.Url = "https://www.rowshare.com";
             var dlg = new Connect(server);
             dlg.Owner = this;
             if (dlg.ShowDialog().GetValueOrDefault())
