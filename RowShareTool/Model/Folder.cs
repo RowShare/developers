@@ -147,7 +147,7 @@ namespace RowShareTool.Model
             if (IsRoot)
                 return false;
 
-            object o = Server.Call("folder/delete/" + IdN, null, this);
+            object o = Server.PostCall("folder/delete", null, new { Id = IdN });
             if (o is bool)
                 return (bool)o;
 

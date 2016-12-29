@@ -8,9 +8,6 @@ using RowShareTool.Model;
 
 namespace RowShareTool
 {
-    /// <summary>
-    /// Interaction logic for ImportFolder.xaml
-    /// </summary>
     public partial class ImportFolder : Window
     {
         private readonly FolderImporter _importer;

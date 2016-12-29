@@ -10,70 +10,53 @@ namespace RowShareTool.Model
         private readonly Folder _outputFolder;
         private readonly List<FolderImporterMessage> _errorMessages = new List<FolderImporterMessage>();
 
-        public Folder SourceInputFolder { get; }
-        public Folder SourceOutputFolder { get; }
-
-        public IReadOnlyCollection<FolderImporterMessage> ErrorMessages
-        {
-            get { return _errorMessages.AsReadOnly(); }
-        }
-
         public event EventHandler<FolderImporterEventArgs> OnError;
         public event EventHandler<FolderImporterEventArgs> OnMessage;
 
-        public FolderImporter(Folder inputFolder, Folder outputFolder)
+        public Folder SourceFolder { get; }
+        public Folder TargetFolder { get; }
+        public IReadOnlyCollection<FolderImporterMessage> ErrorMessages => _errorMessages.AsReadOnly();
+
+        public FolderImporter(Folder sourceFolder, Folder targetFolder)
         {
-            if (inputFolder == null)
-                throw new ArgumentNullException(nameof(inputFolder));
+            if (sourceFolder == null)
+                throw new ArgumentNullException(nameof(sourceFolder));
 
-            if (outputFolder == null)
-                throw new ArgumentNullException(nameof(outputFolder));
+            if (targetFolder == null)
+                throw new ArgumentNullException(nameof(targetFolder));
 
-            if (inputFolder == outputFolder)
-                throw new ArgumentException("output folder must be different from input folder", nameof(outputFolder));
+            if (sourceFolder == targetFolder)
+                throw new ArgumentException(null, nameof(targetFolder));
 
-            if (inputFolder.Server == null)
-                throw new ArgumentException("inputFolder has an invalid server property", nameof(inputFolder));
+            SourceFolder = sourceFolder;
+            TargetFolder = targetFolder;
 
-            if (outputFolder.Server == null)
-                throw new ArgumentException("outputFolder has an invalid server property", nameof(outputFolder));
-
-            if (inputFolder.Server.CompareTo(outputFolder.Server) == 0)
-                throw new ArgumentException("outputFolder must have a different than inputFolder", nameof(outputFolder));
-
-            var iServer = inputFolder.Server.Clone();
-            var iFolders = new Folders(iServer);
-            var iFolder = new Folder(iFolders);
-            iFolder.Id = inputFolder.Id;
+            var sourceServer = sourceFolder.Server.Clone();
+            var sourceFolders = new Folders(sourceServer);
+            var iFolder = new Folder(sourceFolders);
+            iFolder.Id = sourceFolder.Id;
             iFolder.Reload();
 
-
-            var oServer = outputFolder.Server.Clone();
-            var oFolders = new Folders(oServer);
-            var oFolder = new Folder(oFolders);
-            oFolder.Id = outputFolder.Id;
+            var targetServer = targetFolder.Server.Clone();
+            var targetFolders = new Folders(targetServer);
+            var oFolder = new Folder(targetFolders);
+            oFolder.Id = targetFolder.Id;
             oFolder.Reload();
-
 
             _inputFolder = iFolder;
             _outputFolder = oFolder;
-
-            SourceInputFolder = inputFolder;
-            SourceOutputFolder = outputFolder;
         }
 
         public bool CopyAllContent()
         {
             _errorMessages.Clear();
 
-            bool success = true;
-
             _inputFolder.Server.ShowMessageBoxOnError = false;
             _outputFolder.Server.ShowMessageBoxOnError = false;
 
             try
             {
-                CopyFolderContent(_inputFolder, _outputFolder);
+                CopyContent(_inputFolder, _outputFolder);
 
                 _outputFolder.ReloadChildren();
                 _outputFolder.LazyLoadChildren();
@@ -87,13 +70,13 @@ namespace RowShareTool.Model
             return ErrorMessages.Count == 0;
         }
 
-        private void CopyFolderContent(Folder inputFolder, Folder outputFolder)
+        private void CopyContent(Folder inputFolder, Folder outputFolder)
         {
             inputFolder.LazyLoadChildren();
             foreach (var childFolder in inputFolder.Children.OfType<Folder>())
             {
                 var newFolder = CopyFolder(childFolder, outputFolder);
-                CopyFolderContent(childFolder, newFolder);
+                CopyContent(childFolder, newFolder);
             }
 
             inputFolder.LazyLoadChildren();
@@ -114,22 +97,17 @@ namespace RowShareTool.Model
                 }
             }
 
-            AddMessage("Folder processed",
-                folderId: inputFolder.IdN,
-                folderName: inputFolder.DisplayName);
+            AddMessage("Folder processed", folderId: inputFolder.IdN, folderName: inputFolder.DisplayName);
         }
 
         private Folder CopyFolder(Folder inputFolder, Folder targetFolder)
         {
             targetFolder.LazyLoadChildren();
-            var outputFolder =
-                targetFolder.Children.OfType<Folder>()
-                    .FirstOrDefault(f => f.DisplayName.EqualsIgnoreCase(inputFolder.DisplayName));
+            var outputFolder = targetFolder.Children.OfType<Folder>().FirstOrDefault(f => f.DisplayName.EqualsIgnoreCase(inputFolder.DisplayName));
 
             if (outputFolder == null)
             {
                 outputFolder = new Folder(targetFolder);
-
                 var server = outputFolder.Server;
                 var data = new
                 {
@@ -137,17 +115,13 @@ namespace RowShareTool.Model
                     DisplayName = inputFolder.DisplayName,
                     MetaData = inputFolder.MetaData
                 };
-                server.PostCall("folder/save", outputFolder, targetFolder, data);
 
-                AddMessage("Folder created",
-                    folderId: inputFolder.IdN,
-                    folderName: inputFolder.DisplayName);
+                server.PostCall("folder/save", outputFolder, targetFolder, data);
+                AddMessage("Folder created", folderId: inputFolder.IdN, folderName: inputFolder.DisplayName);
             }
             else
             {
-                AddMessage("Folder creation skipped",
-                    folderId: inputFolder.IdN,
-                    folderName: inputFolder.DisplayName);
+                AddMessage("Folder creation skipped", folderId: inputFolder.IdN, folderName: inputFolder.DisplayName);
             }
             return outputFolder;
         }
@@ -155,10 +129,8 @@ namespace RowShareTool.Model
         private void CopyList(List inputList, Folder targetFolder)
         {
             targetFolder.LazyLoadChildren();
-            var outputList =
-                targetFolder.Children.OfType<List>()
-                    .FirstOrDefault(f => f.DisplayName.EqualsIgnoreCase(inputList.DisplayName));
 
+            var outputList = targetFolder.Children.OfType<List>().FirstOrDefault(f => f.DisplayName.EqualsIgnoreCase(inputList.DisplayName));
             if (outputList == null)
             {
                 AddMessage("List saving",
@@ -194,17 +166,17 @@ namespace RowShareTool.Model
                 {
                     CopyRows(inputList, outputList);
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
                     AddError(
-                        ex,
+                        e,
                         folderId: inputList.Parent.IdN,
                         folderName: inputList.Parent.DisplayName,
                         listId: inputList.IdN,
                         listName: inputList.DisplayName);
                 }
-                outputList.Reload();
 
+                outputList.Reload();
                 CopyListIcon(inputList, outputList);
 
                 AddMessage("List saved",
@@ -234,13 +206,12 @@ namespace RowShareTool.Model
 
                 var listIcon = new ListIcon(inputList);
                 listIcon.DownloadFile();
-
                 outputServer.PostBlobCall("list/save/" + targetList.IdN + "/icon", null, null, null, listIcon);
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 AddError(
-                    ex,
+                    e,
                     folderId: inputList.Parent.IdN,
                     folderName: inputList.Parent.DisplayName,
                     listId: inputList.IdN,
@@ -278,8 +249,8 @@ namespace RowShareTool.Model
                     MetaData = inputColumn.MetaData,
                     LookupListId = inputColumn.LookupListId,
                 };
-                server.PostCall("column/save", column, targetList, data);
 
+                server.PostCall("column/save", column, targetList, data);
                 targetList.Columns.Add(column);
             }
         }
@@ -288,7 +259,6 @@ namespace RowShareTool.Model
         {
             var outputServer = targetList.Parent.Server;
             var inputServer = inputList.Parent.Server;
-
             var inputRows = inputList.LoadRows();
 
             foreach (var inputRow in inputRows.OrderBy(r => r.Index))
@@ -320,9 +290,9 @@ namespace RowShareTool.Model
                         }
                         continue;
                     }
-
                     values[column.Name] = inputRow.GetValue(column.Name);
                 }
+
                 var outputRow = new Row(targetList);
                 var newRowData = new
                 {
@@ -342,7 +312,6 @@ namespace RowShareTool.Model
                         {
                             blob.DownloadFile();
                         }
-
                         outputServer.PostBlobCall("row/save", outputRow, targetList, newRowData, mandatoryBlobs);
                     }
                 }
@@ -359,7 +328,6 @@ namespace RowShareTool.Model
                     continue;
                 }
 
-
                 var rowData = new
                 {
                     Id = outputRow.IdN,
@@ -372,13 +340,12 @@ namespace RowShareTool.Model
                     try
                     {
                         blob.DownloadFile();
-
                         outputServer.PostBlobCall("row/save", null, null, rowData, blob);
                     }
-                    catch (Exception ex)
+                    catch (Exception e)
                     {
                         AddError(
-                            ex,
+                            e,
                             folderId: inputList.Parent.IdN,
                             folderName: inputList.Parent.DisplayName,
                             listId: inputList.IdN,
@@ -392,72 +359,37 @@ namespace RowShareTool.Model
             }
         }
 
-        private void AddError(Exception ex, string folderId = null, string folderName = null, string listId = null, string listName = null, string rowId = null, string rowName = null, string blobId = null, string blobName = null)
+        private void AddError(Exception exception, string folderId = null, string folderName = null, string listId = null, string listName = null, string rowId = null, string rowName = null, string blobId = null, string blobName = null)
         {
-            var error = new FolderImporterMessage();
-            error.EventName = "Error";
-            error.FolderId = folderId;
-            error.FolderName = folderName;
-            error.ListId = listId;
-            error.ListName = listName;
-            error.RowId = rowId;
-            error.RowName = rowName;
-            error.BlobId = blobId;
-            error.BlobName = blobName;
-            if (ex != null)
+            var message = new FolderImporterMessage();
+            message.EventName = "Error";
+            message.FolderId = folderId;
+            message.FolderName = folderName;
+            message.ListId = listId;
+            message.ListName = listName;
+            message.RowId = rowId;
+            message.RowName = rowName;
+            message.BlobId = blobId;
+            message.BlobName = blobName;
+            if (exception != null)
             {
-                error.ExceptionMessage = ex.GetErrorText();
+                message.ExceptionMessage = exception.GetErrorText();
             }
 
-            _errorMessages.Add(error);
+            _errorMessages.Add(message);
 
-            var handler = OnError;
-            if (handler != null)
-            {
-                handler(this, new FolderImporterEventArgs(error));
-            }
+            OnError?.Invoke(this, new FolderImporterEventArgs(message));
         }
 
         private void AddMessage(string eventName, string folderId = null, string folderName = null, string listId = null, string listName = null)
         {
-            var error = new FolderImporterMessage();
-            error.EventName = eventName;
-            error.FolderId = folderId;
-            error.FolderName = folderName;
-            error.ListId = listId;
-            error.ListName = listName;
-
-            var handler = OnMessage;
-            if (handler != null)
-            {
-                handler(this, new FolderImporterEventArgs(error));
-            }
-        }
-    }
-
-    public class FolderImporterMessage
-    {
-        public string EventName { get; set; }
-        public string FolderId { get; set; }
-        public string FolderName { get; set; }
-        public string ListId { get; set; }
-        public string ListName { get; set; }
-        public string RowId { get; set; }
-        public string RowName { get; set; }
-        public string BlobId { get; set; }
-        public string BlobName { get; set; }
-        public string ExceptionMessage { get; set; }
-    }
-
-    public class FolderImporterEventArgs : EventArgs
-    {
-        public FolderImporterMessage Message { get; }
-
-        public FolderImporterEventArgs(FolderImporterMessage message)
-        {
-            if (message == null)
-                throw new ArgumentNullException(nameof(message));
-            Message = message;
+            var message = new FolderImporterMessage();
+            message.EventName = eventName;
+            message.FolderId = folderId;
+            message.FolderName = folderName;
+            message.ListId = listId;
+            message.ListName = listName;
+            OnMessage?.Invoke(this, new FolderImporterEventArgs(message));
         }
     }
 }

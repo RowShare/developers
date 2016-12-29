@@ -78,6 +78,8 @@
     </Compile>
     <Compile Include="Model\Blob.cs" />
     <Compile Include="Model\FolderImporter.cs" />
+    <Compile Include="Model\FolderImporterEventArgs.cs" />
+    <Compile Include="Model\FolderImporterMessage.cs" />
     <Compile Include="Model\FolderOptions.cs" />
     <Compile Include="Model\Folders.cs" />
     <Compile Include="Model\IUploadableFile.cs" />

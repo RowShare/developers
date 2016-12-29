@@ -39,8 +39,8 @@
                         <MenuItem Header="Open Table by Id..." Name="TreeViewOpenList" Click="TreeViewOpenList_Click" />
                         <MenuItem Header="Delete..." Name="TreeViewDelete" Click="TreeViewDelete_Click" />
                         <Separator />
-                        <MenuItem Header="Copy Folder From" Name="TreeViewCopyFrom" Click="TreeViewCopyFrom_Click"></MenuItem>
-                        <MenuItem Header="Copy Folder To" Name="TreeViewCopyTo" Click="TreeViewCopyTo_Click"></MenuItem>
+                        <MenuItem Header="Copy Folder Content" Name="TreeViewCopyFrom" Click="TreeViewCopyFrom_Click"></MenuItem>
+                        <MenuItem Header="Paste Folder Content" Name="TreeViewCopyTo" Click="TreeViewCopyTo_Click"></MenuItem>
                         <Separator />
                         <MenuItem Header="Refresh" Name="TreeViewRefresh" Click="TreeViewRefresh_Click" />
                     </ContextMenu>

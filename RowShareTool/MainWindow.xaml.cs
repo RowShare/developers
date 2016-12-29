@@ -14,7 +14,7 @@ namespace RowShareTool
 {
     public partial class MainWindow : Window
     {
-        private Folder _currentCopyFromFolder;
+        private Folder _copyFolder;
 
         public MainWindow()
         {
@@ -102,7 +102,7 @@ namespace RowShareTool
             TreeViewImportList.SetCollapsed(folder == null);
             TreeViewDelete.IsEnabled = server != null || list != null || (folder != null && !folder.IsRoot && (folder.Options & FolderOptions.Undeletable) != FolderOptions.Undeletable);
             TreeViewCopyFrom.IsEnabled = folder != null;
-            TreeViewCopyTo.IsEnabled = folder != null && _currentCopyFromFolder != null && folder.Server.CompareTo(_currentCopyFromFolder.Server) != 0;
+            TreeViewCopyTo.IsEnabled = folder != null && _copyFolder != null && folder.Server.CompareTo(_copyFolder.Server) != 0;
 
             TreeViewLogin.SetCollapsed(server == null);
             TreeViewLogout.SetCollapsed(server == null);
@@ -188,24 +188,29 @@ namespace RowShareTool
                 item.Reload();
             }
         }
+
         private void TreeViewCopyFrom_Click(object sender, RoutedEventArgs e)
         {
             var folder = TV.GetSelectedTag<Folder>();
             if (folder == null)
                 return;
 
-            _currentCopyFromFolder = folder;
+            _copyFolder = folder;
         }
+
         private void TreeViewCopyTo_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentCopyFromFolder == null)
+            if (_copyFolder == null)
                 return;
 
             var folder = TV.GetSelectedTag<Folder>();
             if (folder == null)
                 return;
 
-            var importer = new FolderImporter(_currentCopyFromFolder, folder);
+            if (this.ShowConfirm("Are you sure you want to copy folder '" + _copyFolder.DisplayName + "' from server '" + _copyFolder.Server.DisplayName + "' to folder '" + folder.DisplayName  +"' ?") == MessageBoxResult.No)
+                return;
+
+            var importer = new FolderImporter(_copyFolder, folder);
             var popup = new ImportFolder(importer);
             popup.ShowDialog();
         }
@@ -226,11 +231,18 @@ namespace RowShareTool
                     Settings.RemoveServer(settingsServer);
                     Settings.SerializeToConfiguration();
                 }
-                else if (item.Delete())
+                else
                 {
-                    if (item.Parent != null)
+                    if (item.Delete())
                     {
-                        item.Parent.Reload();
+                        if (item.Parent != null)
+                        {
+                            item.Parent.Reload();
+                        }
+                    }
+                    else
+                    {
+                        this.ShowError("Operation failed.");
                     }
                 }
             }
