@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeFluent.Runtime.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace RowShareTool.Model
         }
 
         public List List { get; set; }
+
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public string ServerUrl { get; set; }
 
         public ObservableCollection<Row> Rows

@@ -41,6 +41,7 @@
                         <Separator />
                         <MenuItem Header="Copy Folder Content" Name="TreeViewCopyFrom" Click="TreeViewCopyFrom_Click"></MenuItem>
                         <MenuItem Header="Paste Folder Content" Name="TreeViewCopyTo" Click="TreeViewCopyTo_Click"></MenuItem>
+                        <MenuItem Header="Export Folder Content" Name="TreeViewExportTo" Click="TreeViewExportTo_Click"></MenuItem>
                         <Separator />
                         <MenuItem Header="Refresh" Name="TreeViewRefresh" Click="TreeViewRefresh_Click" />
                     </ContextMenu>

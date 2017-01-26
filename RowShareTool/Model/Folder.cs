@@ -58,6 +58,7 @@ namespace RowShareTool.Model
         }
 
         [Browsable(false)]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public Guid[] ListsIds
         {
             get
@@ -74,6 +75,7 @@ namespace RowShareTool.Model
         }
 
         [Browsable(false)]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public Guid[] FoldersIds
         {
             get

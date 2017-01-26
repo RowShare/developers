@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CodeFluent.Runtime.Utilities;
+using Microsoft.Win32;
+using RowShareTool.Model;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -6,9 +9,6 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CodeFluent.Runtime.Utilities;
-using Microsoft.Win32;
-using RowShareTool.Model;
 
 namespace RowShareTool
 {
@@ -103,6 +103,7 @@ namespace RowShareTool
             TreeViewDelete.IsEnabled = server != null || list != null || (folder != null && !folder.IsRoot && (folder.Options & FolderOptions.Undeletable) != FolderOptions.Undeletable);
             TreeViewCopyFrom.IsEnabled = folder != null;
             TreeViewCopyTo.IsEnabled = folder != null && _copyFolder != null && folder.Server.CompareTo(_copyFolder.Server) != 0;
+            TreeViewExportTo.IsEnabled = folder != null;
 
             TreeViewLogin.SetCollapsed(server == null);
             TreeViewLogout.SetCollapsed(server == null);
@@ -212,6 +213,17 @@ namespace RowShareTool
 
             var importer = new FolderImporter(_copyFolder, folder);
             var popup = new ImportFolder(importer);
+            popup.ShowDialog();
+        }
+
+        private void TreeViewExportTo_Click(object sender, RoutedEventArgs e)
+        {
+            var folder = TV.GetSelectedTag<Folder>();
+            if (folder == null)
+                return;
+
+            var exporter = new FolderExporter(folder);
+            var popup = new ExportFolder(exporter);
             popup.ShowDialog();
         }
 

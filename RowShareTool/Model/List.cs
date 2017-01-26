@@ -162,6 +162,7 @@ namespace RowShareTool.Model
             }
         }
 
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public int ReportCount
         {
             get
@@ -199,6 +200,7 @@ namespace RowShareTool.Model
         }
 
         [Browsable(false)]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public int ColumnCount
         {
             get

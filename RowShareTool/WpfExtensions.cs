@@ -832,5 +832,39 @@ namespace RowShareTool
 
             return ConvertUtilities.ChangeType(o, defaultValue);
         }
+
+        public static System.Windows.Forms.IWin32Window GetMainWin32Window()
+        {
+            if (Application.Current == null)
+                return null;
+
+            return GetWin32Window(Application.Current.MainWindow);
+        }
+
+        public static System.Windows.Forms.IWin32Window GetWin32Window(Window window)
+        {
+            if (window == null)
+                return null;
+
+            return new Win32Window(new WindowInteropHelper(window).Handle);
+        }
+
+        public static IntPtr GetWindowHandle(Window window)
+        {
+            if (window == null)
+                return IntPtr.Zero;
+
+            return new WindowInteropHelper(window).Handle;
+        }
+
+        public class Win32Window : System.Windows.Forms.IWin32Window
+        {
+            public Win32Window(IntPtr handle)
+            {
+                Handle = handle;
+            }
+
+            public IntPtr Handle { get; private set; }
+        }
     }
 }

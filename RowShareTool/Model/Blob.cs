@@ -1,6 +1,8 @@
-﻿using System;
+﻿using CodeFluent.Runtime.Utilities;
+using System;
 using System.Collections.Generic;
-using CodeFluent.Runtime.Utilities;
+using System.ComponentModel;
+using System.IO;
 
 namespace RowShareTool.Model
 {
@@ -9,6 +11,8 @@ namespace RowShareTool.Model
         private Server _server;
         private Column _column;
         private Row _row;
+        private string _fileNameWithoutExtension;
+        private string _fileExtension;
 
         public Blob(Dictionary<string, object> dico, Column column, Row row, Server server)
         {
@@ -35,6 +39,34 @@ namespace RowShareTool.Model
 
         public string TempFilePath { get; private set; }
         public string RowImageUrl { get { return "/blob/" + _row.IdN + _column.Index + "/" + (int)BlobUrlType.Raw + "/"; } }
+
+        [Browsable(false)]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
+        public string FileNameWithoutExtension
+        {
+            get
+            {
+                if (_fileNameWithoutExtension == null)
+                {
+                    _fileNameWithoutExtension = Path.GetFileNameWithoutExtension(FileName);
+                }
+                return _fileNameWithoutExtension;
+            }
+        }
+
+        [Browsable(false)]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
+        public string FileExtension
+        {
+            get
+            {
+                if (_fileExtension == null)
+                {
+                    _fileExtension = Path.GetExtension(FileName);
+                }
+                return _fileExtension;
+            }
+        }
 
         string IUploadableFile.FormName
         {

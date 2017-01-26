@@ -37,6 +37,7 @@ namespace RowShareTool.Model
         [JsonUtilities(IgnoreWhenSerializing = true)]
         public TreeItem Parent { get; private set; }
 
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public virtual string Url
         {
             get
@@ -58,6 +59,7 @@ namespace RowShareTool.Model
         }
 
         [Browsable(false)]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public virtual bool IsExpanded
         {
             get
@@ -79,6 +81,7 @@ namespace RowShareTool.Model
         }
 
         [Browsable(false)]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public virtual bool IsSelected
         {
             get
@@ -132,6 +135,7 @@ namespace RowShareTool.Model
         }
 
         [Browsable(false)]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public ObservableCollection<TreeItem> Children
         {
             get
@@ -141,6 +145,7 @@ namespace RowShareTool.Model
         }
 
         [Browsable(false)]
+        [JsonUtilities(IgnoreWhenSerializing = true)]
         public bool HasLazyChild
         {
             get
