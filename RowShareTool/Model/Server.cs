@@ -109,7 +109,7 @@ namespace RowShareTool.Model
 
         public List LoadList(string id)
         {
-            var folder = new Folder(this);
+            var folder = new Folder(Folders);
             var list = new List(folder);
             list.Id = ConvertUtilities.ChangeType(id, Guid.Empty);
             var guid = Guid.NewGuid().ToString();
